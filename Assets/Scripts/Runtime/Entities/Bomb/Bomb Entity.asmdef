@@ -1,0 +1,27 @@
+{
+    "name": "Bomb Entity",
+    "rootNamespace": "Game.Runtime.Entities.Bomb",
+    "references": [
+        "GUID:33759803a11f4d538227861a78aba30b",
+        "GUID:61a83a5ac6dc6204499e1916c85231af",
+        "GUID:56a55aacba2d9bf4b8f3aa860bbecb23",
+        "GUID:03c84b9123ed8a94caede22dff1f59c9",
+        "GUID:a1dbcbb491c78644f8af1ca26547a4a8",
+        "GUID:2d75435588ce5cd489750d0278b55067",
+        "GUID:d8d6d64abc21be44aa8e2bd54332013d",
+        "GUID:b88e54b067e988844bf9849461f5d088"
+    ],
+    "includePlatforms": [
+        "Editor",
+        "LinuxStandalone64",
+        "WindowsStandalone64"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

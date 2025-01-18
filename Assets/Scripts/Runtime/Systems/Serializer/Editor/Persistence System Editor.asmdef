@@ -1,0 +1,19 @@
+{
+    "name": "Persistence System Editor",
+    "rootNamespace": "Game.Runtime.Systems.Persistence",
+    "references": [
+        "GUID:9b4dd2d915b21b84c806355af39b3ae3",
+        "GUID:56a55aacba2d9bf4b8f3aa860bbecb23"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

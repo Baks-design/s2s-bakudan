@@ -1,0 +1,192 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1233149941 &-8706615595005047731
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Footsteps_MetalV2_Run_01_{-8706615595005047731}
+  m_AudioClip: {fileID: 8300000, guid: 3e299b9129329f24692bb63f57f33d19, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &-6034811227777979158
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Footsteps_MetalV2_Run_05_{-6034811227777979158}
+  m_AudioClip: {fileID: 8300000, guid: 83e12fcd809c9444192c377fe18a65e5, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &-4961023325230070006
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Footsteps_MetalV2_Run_06_{-4961023325230070006}
+  m_AudioClip: {fileID: 8300000, guid: 6056a660bb0897e4ea25a31889075437, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &-4658994581666831890
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Footsteps_MetalV2_Run_14_{-4658994581666831890}
+  m_AudioClip: {fileID: 8300000, guid: 39ca7e88dc461e8458d02a2284708c0d, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &-4610507140691639963
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Footsteps_MetalV2_Run_12_{-4610507140691639963}
+  m_AudioClip: {fileID: 8300000, guid: 90754431c63071d48b2bfa8dc2472b9d, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &-3183558336977097292
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Footsteps_MetalV2_Run_03_{-3183558336977097292}
+  m_AudioClip: {fileID: 8300000, guid: 72b37684ac7a413499d259a0a9be50e6, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &-3103809388526432223
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Footsteps_MetalV2_Run_15_{-3103809388526432223}
+  m_AudioClip: {fileID: 8300000, guid: d772d1b334ef5f148bf1308d5fb3e4b0, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &-967991283415047214
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Footsteps_MetalV2_Run_04_{-967991283415047214}
+  m_AudioClip: {fileID: 8300000, guid: 5da9a1fac751fd544933656ba7cdb367, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &958884586599445026
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Footsteps_MetalV2_Run_07_{958884586599445026}
+  m_AudioClip: {fileID: 8300000, guid: af104ebdf73bf7a4ba6013021dd458cb, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &2918917855982475534
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Footsteps_MetalV2_Run_08_{2918917855982475534}
+  m_AudioClip: {fileID: 8300000, guid: e968240fec458e24a862c16541a528c6, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &5702867388483604083
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Footsteps_MetalV2_Run_11_{5702867388483604083}
+  m_AudioClip: {fileID: 8300000, guid: 642f9eb7b8ea3f14e9fc48dff8f8e34b, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1307931743 &6418180475301049370
+AudioRandomContainer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Run Footstep Metal
+  m_Volume: -10
+  m_Pitch: -200
+  m_AutomaticTriggerTime: 13.7
+  m_LoopCount: 1
+  m_VolumeRandomizationRange: {x: -2, y: 2}
+  m_PitchRandomizationRange: {x: -500, y: 500}
+  m_AutomaticTriggerTimeRandomizationRange: {x: -18.96154, y: 11.576929}
+  m_LoopCountRandomizationRange: {x: 0, y: 0}
+  m_Elements:
+  - {fileID: -8706615595005047731}
+  - {fileID: 7491959493911939196}
+  - {fileID: -3183558336977097292}
+  - {fileID: -967991283415047214}
+  - {fileID: -6034811227777979158}
+  - {fileID: -4961023325230070006}
+  - {fileID: 958884586599445026}
+  - {fileID: 2918917855982475534}
+  - {fileID: 7639914221003802835}
+  - {fileID: 6426420612141219669}
+  - {fileID: 5702867388483604083}
+  - {fileID: -4610507140691639963}
+  - {fileID: 6468193468471835626}
+  - {fileID: -4658994581666831890}
+  - {fileID: -3103809388526432223}
+  m_AvoidRepeatingLast: 0
+  m_PlaybackMode: 2
+  m_TriggerMode: 1
+  m_AutomaticTriggerMode: 0
+  m_LoopMode: 0
+  m_VolumeRandomizationEnabled: 1
+  m_PitchRandomizationEnabled: 1
+  m_AutomaticTriggerTimeRandomizationEnabled: 1
+  m_LoopCountRandomizationEnabled: 0
+--- !u!1233149941 &6426420612141219669
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Footsteps_MetalV2_Run_10_{6426420612141219669}
+  m_AudioClip: {fileID: 8300000, guid: 22dffeeb60f8846499a8c08a2c0e6f80, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &6468193468471835626
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Footsteps_MetalV2_Run_13_{6468193468471835626}
+  m_AudioClip: {fileID: 8300000, guid: d51df139d4e50794993d2130348b08d9, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &7491959493911939196
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Footsteps_MetalV2_Run_02_{7491959493911939196}
+  m_AudioClip: {fileID: 8300000, guid: 38f0c96f5fc9ad54bb7f70129602e268, type: 3}
+  m_Volume: 0
+  m_Enabled: 1
+--- !u!1233149941 &7639914221003802835
+AudioContainerElement:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Footsteps_MetalV2_Run_09_{7639914221003802835}
+  m_AudioClip: {fileID: 8300000, guid: 72854b6a8fde5e54eb8ae2eb10155f45, type: 3}
+  m_Volume: 0
+  m_Enabled: 1

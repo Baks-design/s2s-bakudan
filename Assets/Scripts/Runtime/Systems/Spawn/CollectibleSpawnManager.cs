@@ -1,0 +1,43 @@
+﻿using Game.Runtime.Utilities.Helpers.Timers;
+using UnityEngine;
+
+namespace Game.Runtime.Systems.Spawn
+{
+    public class CollectibleSpawnManager : EntitySpawnManager, ISpawnService
+    {
+        [SerializeField] float spawnInterval = 1f;
+        [SerializeField] CollectibleData[] collectibleData;
+        EntitySpawner<Collectible> spawner;
+        int counter;
+        CountdownTimer spawnTimer;
+        
+        protected override void Awake()
+        {
+            base.Awake();
+
+            spawner = new EntitySpawner<Collectible>(
+                new EntityFactory<Collectible>(collectibleData),
+                spawnPointStrategy);
+
+            spawnTimer = new CountdownTimer(spawnInterval);
+            spawnTimer.OnTimerStop += () =>
+            {
+                if (counter++ >= spawnPoints.Length)
+                {
+                    spawnTimer.Stop();
+                    return;
+                }
+                spawner.Spawn();
+                spawnTimer.Start();
+            };
+        }
+
+        void Start() => spawnTimer.Start();
+
+        void Update() => spawnTimer.Tick();
+
+        public override void Spawn() => spawner.Spawn();
+
+        public void ResetCount() => counter = 0;
+    }
+}

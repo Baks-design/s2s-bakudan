@@ -1,0 +1,21 @@
+{
+    "name": "Audio System",
+    "rootNamespace": "Game.Runtime.Systems.Audio",
+    "references": [
+        "GUID:1f9e0dafea8706844993160462f033fe",
+        "GUID:03c84b9123ed8a94caede22dff1f59c9"
+    ],
+    "includePlatforms": [
+        "Editor",
+        "LinuxStandalone64",
+        "WindowsStandalone64"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

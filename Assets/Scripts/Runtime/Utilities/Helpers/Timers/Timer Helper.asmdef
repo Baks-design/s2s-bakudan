@@ -1,0 +1,23 @@
+{
+    "name": "Timer Helper",
+    "rootNamespace": "Game.Runtime.Utilities.Helpers.Timers",
+    "references": [
+        "GUID:1f9e0dafea8706844993160462f033fe",
+        "GUID:33759803a11f4d538227861a78aba30b",
+        "GUID:56a55aacba2d9bf4b8f3aa860bbecb23"
+    ],
+    "includePlatforms": [
+        "Editor",
+        "LinuxStandalone64",
+        "WindowsStandalone32",
+        "WindowsStandalone64"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
