@@ -1,12 +1,18 @@
+using Game.Runtime.Systems.Interaction;
 using KBCore.Refs;
 using UnityEngine;
 
 namespace Game.Runtime.Entities.Player.Controllers
 {
-    public class ForcesController : MonoBehaviour
+    public class ForcesController : MonoBehaviour, IImpactable
     {
         [SerializeField, Self] CharacterController cc;
         [SerializeField] float pushForce = 5f;
+
+        public void ApplyForce(Vector3 throwDirection, float throwForce)
+        {
+           
+        }
 
         public void ApplyForceBy(float applyForce, float applyRadius, Vector3 center)
         {

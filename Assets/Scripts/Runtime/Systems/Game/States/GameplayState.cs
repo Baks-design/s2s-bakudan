@@ -1,3 +1,4 @@
+using Game.Runtime.Utilities.Helpers;
 using Game.Runtime.Utilities.Patterns.StateMachines;
 
 namespace Game.Runtime.Systems.GameManagement.States
@@ -10,7 +11,7 @@ namespace Game.Runtime.Systems.GameManagement.States
 
         public void OnEnter()
         {
-            GameManager.SetCursorLock(true);
+            Helpers.SetCursorLock(true);
             _manager.InputReader.ChangeToPlayerMap();
         }
     }

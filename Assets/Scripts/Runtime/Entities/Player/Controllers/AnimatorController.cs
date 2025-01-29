@@ -21,38 +21,41 @@ namespace Game.Runtime.Entities.Player.Controllers
     /// and expects to be driven by the SimplePlayerControllerBase using the STartJump, EndJump, 
     /// and PostUpdate callbacks.
     /// </summary>
-    public  class AnimatorController : MonoBehaviour
+    public class AnimatorController : MonoBehaviour
     {
-        public enum States { Idle, Walk, Run, Jump, RunJump }
+        public enum States { Idle, Run, Die, Throw }
 
         [SerializeField, Parent] MovementControllerBase controller;
         [SerializeField, Self] Transform transformReference;
         [SerializeField, Self] Animator animator;
-        [SerializeField] float normalWalkSpeed = 1.7f;
-        [SerializeField] float normalSprintSpeed = 5f;
+        //[SerializeField] float normalWalkSpeed = 1.7f;
+        [SerializeField] float sprintSpeed = 5f;
         [SerializeField] float maxSprintScale = 1.4f;
-        [SerializeField] float jumpAnimationScale = 0.65f;
+        //[SerializeField] float jumpAnimationScale = 0.65f;
         Vector3 previousPosition;
-        const float IdleThreshold = 0.2f;
+        //const float IdleThreshold = 0.2f;
         AnimationParams animationParams;
-        static readonly int DirXHash = Animator.StringToHash("DirX");
-        static readonly int DirZHash = Animator.StringToHash("DirZ");
-        static readonly int MotionScaleHash = Animator.StringToHash("MotionScale");
-        static readonly int WalkingHash = Animator.StringToHash("Walking");
-        static readonly int RunningHash = Animator.StringToHash("Running");
-        static readonly int JumpScaleHash = Animator.StringToHash("JumpScale");
-        static readonly int JumpHash = Animator.StringToHash("Jump");
-        static readonly int LandHash = Animator.StringToHash("Land");
+        //static readonly int DirXHash = Animator.StringToHash("DirX");
+        //static readonly int DirZHash = Animator.StringToHash("DirZ");
+        //static readonly int MotionScaleHash = Animator.StringToHash("MotionScale");
+        //static readonly int WalkingHash = Animator.StringToHash("Walking");
+        static readonly int IdlingHash = Animator.StringToHash("IsIdling");
+        static readonly int RunningHash = Animator.StringToHash("IsRunning");
+        static readonly int DyingHash = Animator.StringToHash("IsDying");
+        static readonly int ThrowingHash = Animator.StringToHash("IsThrowing");
+        //static readonly int JumpScaleHash = Animator.StringToHash("JumpScale");
+        //static readonly int JumpHash = Animator.StringToHash("Jump");
+        //static readonly int LandHash = Animator.StringToHash("Land");
 
         public States CurrentState
         {
             get
             {
-                if (animationParams.IsJumping)
-                    return animationParams.IsRunning ? States.RunJump : States.Jump;
+                //if (animationParams.IsJumping)
+                // return animationParams.IsRunning ? States.RunJump : States.Jump;
                 if (animationParams.IsRunning)
                     return States.Run;
-                return animationParams.IsWalking ? States.Walk : States.Idle;
+                return animationParams.IsRunning ? States.Run : States.Idle;
             }
         }
 
@@ -60,8 +63,8 @@ namespace Game.Runtime.Entities.Player.Controllers
         {
             previousPosition = transform.position;
 
-            controller.StartJump += () => animationParams.JumpTriggered = true;
-            controller.EndJump += () => animationParams.LandTriggered = true;
+            //controller.StartJump += () => animationParams.JumpTriggered = true;
+            //controller.EndJump += () => animationParams.LandTriggered = true;
             controller.PostUpdate += UpdateAnimationState;
         }
 
@@ -80,41 +83,44 @@ namespace Game.Runtime.Entities.Player.Controllers
             velocity.y = 0f;
             var speed = velocity.magnitude;
 
-            var isRunning = speed > normalWalkSpeed * 2f + (animationParams.IsRunning ? -0.15f : 0.15f);
-            var isWalking = !isRunning && speed > IdleThreshold + (animationParams.IsWalking ? -0.05f : 0.05f);
+            var isRunning = speed > sprintSpeed * 2f + (animationParams.IsRunning ? -0.15f : 0.15f);
+            //var isWalking = !isRunning && speed > IdleThreshold + (animationParams.IsWalking ? -0.05f : 0.05f);
 
-            animationParams.IsWalking = isWalking;
+            //animationParams.IsWalking = isWalking;
             animationParams.IsRunning = isRunning;
 
-            animationParams.Direction = speed > IdleThreshold ? velocity / speed : Vector3.zero;
-            animationParams.MotionScale = isWalking ? speed / normalWalkSpeed : 1f;
-            animationParams.JumpScale = jumpAnimationScale * this.jumpAnimationScale;
+            // animationParams.Direction = speed > IdleThreshold ? velocity / speed : Vector3.zero;
+            // animationParams.MotionScale = isWalking ? speed / normalWalkSpeed : 1f;
+            // animationParams.JumpScale = jumpAnimationScale * this.jumpAnimationScale;
 
-            if (isRunning)
-                animationParams.MotionScale = (speed < normalSprintSpeed)
-                    ? speed / normalSprintSpeed
-                    : Mathf.Min(maxSprintScale, 1f + (speed - normalSprintSpeed) / (3f * normalSprintSpeed));
+            // if (isRunning)
+            //     animationParams.MotionScale = (speed < normalSprintSpeed)
+            //         ? speed / normalSprintSpeed
+            //         : Mathf.Min(maxSprintScale, 1f + (speed - normalSprintSpeed) / (3f * normalSprintSpeed));
 
             UpdateAnimator(animationParams);
 
-            animationParams.IsJumping = animationParams.JumpTriggered || 
-                animationParams.IsJumping && !animationParams.LandTriggered;
-            animationParams.JumpTriggered = false;
-            animationParams.LandTriggered = false;
+            // animationParams.IsJumping = animationParams.JumpTriggered || 
+            //     animationParams.IsJumping && !animationParams.LandTriggered;
+            // animationParams.JumpTriggered = false;
+            // animationParams.LandTriggered = false;
         }
 
         void UpdateAnimator(AnimationParams animationParams)
         {
-            animator.SetFloat(DirXHash, animationParams.Direction.x);
-            animator.SetFloat(DirZHash, animationParams.Direction.z);
-            animator.SetFloat(MotionScaleHash, animationParams.MotionScale);
-            animator.SetBool(WalkingHash, animationParams.IsWalking);
+            // animator.SetFloat(DirXHash, animationParams.Direction.x);
+            // animator.SetFloat(DirZHash, animationParams.Direction.z);
+            // animator.SetFloat(MotionScaleHash, animationParams.MotionScale);
+            //animator.SetBool(WalkingHash, animationParams.IsWalking);
+            animator.SetBool(IdlingHash, !animationParams.IsRunning);
             animator.SetBool(RunningHash, animationParams.IsRunning);
-            animator.SetFloat(JumpScaleHash, animationParams.JumpScale);
-            if (animationParams.JumpTriggered)
-                animator.SetTrigger(JumpHash);
-            if (animationParams.LandTriggered)
-                animator.SetTrigger(LandHash);
+            animator.SetBool(DyingHash, animationParams.IsDying);
+            animator.SetBool(ThrowingHash, animationParams.IsThrowing);
+            //animator.SetFloat(JumpScaleHash, animationParams.JumpScale);
+            // if (animationParams.JumpTriggered)
+            //     animator.SetTrigger(JumpHash);
+            // if (animationParams.LandTriggered)
+            //     animator.SetTrigger(LandHash);
         }
     }
 }

@@ -3,8 +3,6 @@ using Game.Runtime.Systems.GameManagement.States;
 using Game.Runtime.Utilities.Patterns.StateMachines;
 using Game.Runtime.Utilities.Patterns.EventBus;
 using Game.Runtime.Systems.Events;
-using Game.Runtime.Systems.SceneManagement;
-using Game.Runtime.Utilities.Patterns.ServiceLocator;
 
 namespace Game.Runtime.Systems.GameManagement
 {
@@ -13,7 +11,6 @@ namespace Game.Runtime.Systems.GameManagement
         [SerializeField] InputReader inputReader;
         bool changeToPause;
         bool changeToGameplay;
-        ISceneLoaderService loaderService;
         EventBinding<UIEvent> uiPauseEventBinding;
         EventBinding<UIEvent> uiGameplayEventBinding;
 
@@ -23,13 +20,18 @@ namespace Game.Runtime.Systems.GameManagement
         {
             base.Awake();
             InputActions();
-            SubsEvents(); 
+            SubsEvents();
         }
 
         void OnEnable()
         {
-            InitServices();
-            CreateStateMachine();
+            var gameplayState = new GameplayState(this);
+            var pauseState = new PauseState(this);
+
+            At(gameplayState, pauseState, changeToPause);
+            At(pauseState, gameplayState, changeToGameplay);
+
+            StateMachine.SetState(gameplayState);
         }
 
         void Start() => InitializePlayer();
@@ -42,24 +44,13 @@ namespace Game.Runtime.Systems.GameManagement
             Debug.Log($"Game Current State: {StateMachine.CurrentState}");
         }
 
-        void OnDisable() => UnsubsEvents();
-
-        async void LoadScenes() => await loaderService.LoadSceneGroup(0);
+        void OnDisable()
+        {
+            EventBus<UIEvent>.Deregister(uiPauseEventBinding);
+            EventBus<UIEvent>.Deregister(uiGameplayEventBinding);
+        }
 
         void InputActions() => inputReader.EnableInputActions();
-
-        void InitServices() => ServiceLocator.Global.Get(out loaderService);
-
-        void CreateStateMachine()
-        {
-            var gameplayState = new GameplayState(this);
-            var pauseState = new PauseState(this);
-
-            At(gameplayState, pauseState, changeToPause);
-            At(pauseState, gameplayState, changeToGameplay);
-
-            StateMachine.SetState(gameplayState);
-        }
 
         void InitializePlayer() => EventBus<PlayerEvent>.Raise(new PlayerEvent());
 
@@ -72,12 +63,6 @@ namespace Game.Runtime.Systems.GameManagement
             EventBus<UIEvent>.Register(uiGameplayEventBinding);
         }
 
-        void UnsubsEvents()
-        {
-            EventBus<UIEvent>.Deregister(uiPauseEventBinding);
-            EventBus<UIEvent>.Deregister(uiGameplayEventBinding);
-        }
-
         void OnPauseStateRequested(UIEvent uiEvent)
         {
             changeToPause = true;
@@ -88,12 +73,6 @@ namespace Game.Runtime.Systems.GameManagement
         {
             changeToGameplay = true;
             changeToPause = false;
-        }
-
-        public static void SetCursorLock(bool isLocked)
-        {
-            Cursor.lockState = isLocked ? CursorLockMode.Locked : CursorLockMode.None;
-            Cursor.visible = !isLocked;
         }
     }
 }

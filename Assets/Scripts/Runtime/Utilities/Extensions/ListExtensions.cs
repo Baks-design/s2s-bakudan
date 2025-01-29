@@ -6,7 +6,7 @@ namespace Game.Runtime.Utilities.Extensions
 {
     public static class ListExtensions
     {
-        private static Random _rng;
+        static Random _rng;
 
         /// <summary>
         /// Determines whether a collection is null or has no elements
@@ -36,7 +36,8 @@ namespace Game.Runtime.Utilities.Extensions
 
         /// <summary>
         /// Shuffles the elements in the list using the Durstenfeld implementation of the Fisher-Yates algorithm.
-        /// This method modifies the input list in-place, ensuring each permutation is equally likely, and returns the list for method chaining.
+        /// This method modifies the input list in-place, ensuring each permutation is equally likely, 
+        /// and returns the list for method chaining.
         /// Reference: http://en.wikipedia.org/wiki/Fisher-Yates_shuffle
         /// </summary>
         /// <param name="list">The list to be shuffled.</param>

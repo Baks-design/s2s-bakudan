@@ -5,7 +5,7 @@ namespace Game.Runtime.Utilities.Helpers
 {
     public static class WaitFor
     {
-        private static readonly Dictionary<float, WaitForSeconds> WaitForSecondsDict = new(100, new FloatComparer());
+        static readonly Dictionary<float, WaitForSeconds> WaitForSecondsDict = new(100, new FloatComparer());
 
         public static WaitForFixedUpdate FixedUpdate { get; } = new();
         public static WaitForEndOfFrame EndOfFrame { get; } = new();
@@ -22,7 +22,7 @@ namespace Game.Runtime.Utilities.Helpers
             return forSeconds;
         }
 
-        private class FloatComparer : IEqualityComparer<float>
+        class FloatComparer : IEqualityComparer<float>
         {
             public bool Equals(float x, float y) => Mathf.Abs(x - y) <= Mathf.Epsilon;
 

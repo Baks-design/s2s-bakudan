@@ -21,6 +21,12 @@ namespace Game.Runtime.Utilities.Helpers
             var method = type.GetMethod("Clear");
             method?.Invoke(new object(), null);
         }
-#endif        
+#endif      
+
+        public static void SetCursorLock(bool isLocked)
+        {
+            Cursor.lockState = isLocked ? CursorLockMode.Locked : CursorLockMode.None;
+            Cursor.visible = !isLocked;
+        }
     }
 }

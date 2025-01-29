@@ -6,10 +6,6 @@ using Unity.Cinemachine;
 namespace Game.Runtime.Entities.Player.Controllers
 {
     /// <summary>
-    /// This is the base class for SimplePlayerController and SimplePlayerController2D.  
-    /// You can also use it as a base class for your custom controllers.  
-    /// It provides the following:
-    /// 
     /// **Services:**
     /// 
     ///  - 2D motion axes (MoveX and MoveZ)

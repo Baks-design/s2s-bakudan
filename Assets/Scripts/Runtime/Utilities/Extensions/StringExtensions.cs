@@ -25,8 +25,7 @@ namespace Game.Runtime.Utilities.Extensions
         /// </summary>
         public static string Shorten(this string val, int maxLength)
         {
-            if (val.IsBlank())
-                return val;
+            if (val.IsBlank()) return val;
             return val.Length <= maxLength ? val : val[..maxLength];
         }
 
@@ -91,40 +90,40 @@ namespace Game.Runtime.Utilities.Extensions
             .Append(text)
             .Append("</color>")
             .ToString();
-        
+
         public static string RichSize(this string text, int size) => new StringBuilder().Append("<size=")
             .Append(size)
             .Append(">")
             .Append(text)
             .Append("</size>")
             .ToString();
-        
+
         public static string RichBold(this string text) =>
             new StringBuilder().Append("<b>").Append(text).Append("</b>").ToString();
-        
+
         public static string RichItalic(this string text) =>
             new StringBuilder().Append("<i>").Append(text).Append("</i>").ToString();
-        
+
         public static string RichUnderline(this string text) =>
             new StringBuilder().Append("<u>").Append(text).Append("</u>").ToString();
-        
+
         public static string RichStrikethrough(this string text) =>
             new StringBuilder().Append("<s>").Append(text).Append("</s>").ToString();
-        
+
         public static string RichFont(this string text, string font) => new StringBuilder().Append("<font=")
             .Append(font)
             .Append(">")
             .Append(text)
             .Append("</font>")
             .ToString();
-        
+
         public static string RichAlign(this string text, string align) => new StringBuilder().Append("<align=")
             .Append(align)
             .Append(">")
             .Append(text)
             .Append("</align>")
             .ToString();
-        
+
         public static string RichGradient(this string text, string color1, string color2) => new StringBuilder()
             .Append("<gradient=")
             .Append(color1)
@@ -134,14 +133,14 @@ namespace Game.Runtime.Utilities.Extensions
             .Append(text)
             .Append("</gradient>")
             .ToString();
-        
+
         public static string RichRotation(this string text, float angle) => new StringBuilder().Append("<rotate=")
             .Append(angle)
             .Append(">")
             .Append(text)
             .Append("</rotate>")
             .ToString();
-        
+
         public static string RichSpace(this string text, float space) => new StringBuilder().Append("<space=")
             .Append(space)
             .Append(">")

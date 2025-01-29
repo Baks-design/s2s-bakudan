@@ -3,7 +3,6 @@
     "rootNamespace": "Game.Runtime.Entities.Player",
     "references": [
         "GUID:4307f53044263cf4b835bd812fc161a4",
-        "GUID:75469ad4d38634e559750d17036d5f7c",
         "GUID:696a0953692949b40bec8730e64e1fdd",
         "GUID:33759803a11f4d538227861a78aba30b",
         "GUID:caca889fed6088d40b22c2d7e2909c31",
@@ -12,7 +11,10 @@
         "GUID:2d75435588ce5cd489750d0278b55067",
         "GUID:56a55aacba2d9bf4b8f3aa860bbecb23",
         "GUID:1f9e0dafea8706844993160462f033fe",
-        "GUID:03c84b9123ed8a94caede22dff1f59c9"
+        "GUID:03c84b9123ed8a94caede22dff1f59c9",
+        "GUID:0deea4fa18234574cbeea98a850f1017",
+        "GUID:aa4cb7efd8452834e8b34b6122a6931e",
+        "GUID:f894b29b97d80c9489e668bf8d961bc2"
     ],
     "includePlatforms": [
         "Editor",

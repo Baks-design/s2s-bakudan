@@ -7,7 +7,7 @@ namespace Game.Runtime.Systems.Spawn
     {
         [SerializeField] float spawnInterval = 1f;
         [SerializeField] CollectibleData[] collectibleData;
-        EntitySpawner<Collectible> spawner;
+        EntitySpawner<Collectable> spawner;
         int counter;
         CountdownTimer spawnTimer;
         
@@ -15,8 +15,8 @@ namespace Game.Runtime.Systems.Spawn
         {
             base.Awake();
 
-            spawner = new EntitySpawner<Collectible>(
-                new EntityFactory<Collectible>(collectibleData),
+            spawner = new EntitySpawner<Collectable>(
+                new EntityFactory<Collectable>(collectibleData),
                 spawnPointStrategy);
 
             spawnTimer = new CountdownTimer(spawnInterval);
