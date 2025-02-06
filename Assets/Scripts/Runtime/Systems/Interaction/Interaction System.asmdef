@@ -1,10 +1,12 @@
 {
-    "name": "InterationSystem",
-    "rootNamespace": "",
-    "references": [],
+    "name": "Game.Runtime.Systems.Interaction",
+    "rootNamespace": "Game.Runtime.Systems.Interaction",
+    "references": [
+        "GUID:0deea4fa18234574cbeea98a850f1017",
+        "GUID:33759803a11f4d538227861a78aba30b"
+    ],
     "includePlatforms": [
         "Editor",
-        "LinuxStandalone64",
         "WindowsStandalone64"
     ],
     "excludePlatforms": [],

@@ -1,11 +1,9 @@
 {
-    "name": "Extensions",
+    "name": "Game.Runtime.Utilities.Extensions",
     "rootNamespace": "Game.Runtime.Utilities.Extensions",
     "references": [],
     "includePlatforms": [
         "Editor",
-        "LinuxStandalone64",
-        "WindowsStandalone32",
         "WindowsStandalone64"
     ],
     "excludePlatforms": [],

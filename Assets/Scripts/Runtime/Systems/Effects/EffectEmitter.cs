@@ -1,4 +1,5 @@
 using System.Collections;
+using Game.Runtime.Utilities.Patterns.ServiceLocator;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -8,6 +9,9 @@ namespace Game.Runtime.Systems.VFX
     {
         [SerializeField] VisualEffect visualEffect;
         Coroutine playingCoroutine;
+        IEffectService effectService;
+
+        void Start() => ServiceLocator.Global.Get(out effectService);
 
         public void Initialize(EffectData data)
         {
@@ -40,7 +44,7 @@ namespace Game.Runtime.Systems.VFX
             }
 
             visualEffect.Stop();
-            //TODO: SoundManager.Instance.ReturnToPool(this);
+            effectService.ReturnToPool(this);
         }
     }
 }

@@ -1,45 +1,36 @@
 using System.Collections;
 using KBCore.Refs;
 using UnityEngine;
-using Game.Runtime.Utilities.Helpers.Timers;
 using Game.Runtime.Utilities.Helpers;
 using Game.Runtime.Components.Damage;
 using Game.Runtime.Systems.Interaction;
+using System;
 
 namespace Game.Runtime.Entities.Bomb
 {
-    public class BombController : MonoBehaviour, IInteractable, IImpactable
+    public class BombController : MonoBehaviour, IInteractable
     {
-        [SerializeField, Self] Rigidbody rb;
         [SerializeField, Self] Transform tr;
-        [SerializeField, Child] BombUI ui;
-        [SerializeField, Child] BombSFX sfx;
-        [SerializeField, Child] BombVFX bombVFX;
+        [SerializeField, Self] Rigidbody rb;
+
+        [Header("Bomb Settings")]
         [SerializeField] LayerMask groundLayerMask;
-        [SerializeField] LayerMask aflictedLayerMask;
+        [SerializeField] int damage = 20;
         [SerializeField] float explosionRadius = 5f;
         [SerializeField] float explosionForce = 10f;
-        [SerializeField] float upwardThrowAngle = 10f;
-        readonly Collider[] colliders = new Collider[50];
-        readonly CountdownTimer timer = new(5f);
-        bool isCollected;
+        bool isCollected = false;
+        bool isThrown = false;
+        const float fuseTime = 3f;
+        readonly Collider[] collidersBuffer = new Collider[10];
 
-        void Awake() => SetRigigBody(false);
+        public event Action OnExploded = delegate { };
 
-        void OnEnable() => timer.OnTimerStop += HandleExplosionRoutine;
+        void Awake() => SetRigigBody(true);
 
-        void Update()
-        {
-            if (!timer.IsRunning) return;
-            ui.UpdateTimer(timer);
-            CollectedState();
-        }
         void OnCollisionStay(Collision collisionInfo)
         {
-            if (IsInLayerMask(collisionInfo.collider.gameObject, groundLayerMask))
-                SetRigigBody(true);
-
-            static bool IsInLayerMask(GameObject obj, LayerMask layerMask) => (layerMask.value & (1 << obj.layer)) != 0;
+            if (Helpers.IsInLayerMask(collisionInfo.collider.gameObject, groundLayerMask))
+                SetRigigBody(false);
         }
 
         void OnDrawGizmosSelected()
@@ -48,76 +39,65 @@ namespace Game.Runtime.Entities.Bomb
             Gizmos.DrawWireSphere(tr.position, explosionRadius);
         }
 
-        void OnDisable() => timer.OnTimerStop -= HandleExplosionRoutine;
-
-        void OnDestroy() => timer.Dispose();
-
         public void Collect()
         {
-            StartBomb();
-            SetRigigBody(true);
+            if (isCollected)
+                return;
+
+            SetRigigBody(false);
             isCollected = true;
+            Debug.Log("Bomb collected!");
         }
 
         public void Drop()
         {
-            SetRigigBody(false);
-            isCollected = false;
-        }
+            if (!isCollected || isThrown)
+                return;
 
-        public void ApplyForce(Vector3 throwDirection, float throwForce)
-            => rb.AddForce(throwDirection * throwForce, ForceMode.Impulse);
+            SetRigigBody(true);
+            isThrown = true;
+            Debug.Log($"Bomb thrown! Exploding in {fuseTime} seconds.");
 
-        void StartBomb() => timer.Start();
-
-        void CollectedState()
-        {
-            if (!isCollected) return;
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+            StartCoroutine(ExplodeAfterFuse());
         }
 
         void SetRigigBody(bool isGet)
         {
             if (isGet)
             {
-                rb.useGravity = false;
-                rb.isKinematic = true;
-            }
-            else
-            {
                 rb.useGravity = true;
                 rb.isKinematic = false;
             }
+            else
+            {
+                rb.useGravity = false;
+                rb.isKinematic = true;
+            }
         }
 
-        void HandleExplosionRoutine() => StartCoroutine(ExplodeOnCountdownEnds());
-
-        IEnumerator ExplodeOnCountdownEnds()
+        IEnumerator ExplodeAfterFuse()
         {
-            while (!timer.IsFinished)
-                yield return null;
+            yield return WaitFor.Seconds(fuseTime);
 
-            var colliderCount = Physics.OverlapSphereNonAlloc(
-                tr.position, explosionRadius, colliders, aflictedLayerMask, QueryTriggerInteraction.Ignore);
-            for (var i = 0; i < colliderCount; i++)
+            Debug.Log("Bomb exploded!");
+
+            OnExploded?.Invoke();
+
+            var hitCount = Physics.OverlapSphereNonAlloc(tr.position, explosionRadius, collidersBuffer);
+            for (var i = 0; i < hitCount; i++)
             {
-                var nearbyObject = colliders[i];
+                var collider = collidersBuffer[i];
+                if (collider == null)
+                    continue;
 
-                if (nearbyObject.TryGetComponent(out IDamageable health))
-                    health.TakeDamage(5f, gameObject);
+                if (collider.TryGetComponent(out IDamageable damageable))
+                    damageable.TakeDamage(damage, gameObject);
 
-                if (nearbyObject.TryGetComponent(out IImpactable impactable))
-                {
-                    var throwDirection = (tr.forward + tr.up * upwardThrowAngle).normalized;
-                    impactable.ApplyForce(throwDirection, explosionForce);
-                }
+                if (collider.TryGetComponent(out IImpactable impactable))
+                    impactable.ApplyForce(Vector3.up, explosionForce);
             }
 
-            sfx.PlaySFX();
-            bombVFX.PlayVFX();
-
-            yield return WaitFor.Seconds(0.5f);
+            Destroy(gameObject);
         }
     }
 }

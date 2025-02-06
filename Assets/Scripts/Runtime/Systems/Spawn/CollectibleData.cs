@@ -2,6 +2,6 @@
 
 namespace Game.Runtime.Systems.Spawn
 {
-    [CreateAssetMenu(menuName = "Entities/Items/Collectible Data")]
-    public class CollectibleData : EntityData{}
+    [CreateAssetMenu(menuName = "Data/Entities/Items/Collectible Data")]
+    public class CollectibleData : EntityData { }
 }

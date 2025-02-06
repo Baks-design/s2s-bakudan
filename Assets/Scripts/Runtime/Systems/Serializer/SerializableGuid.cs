@@ -25,7 +25,7 @@ namespace Game.Runtime.Systems.Serializer
             Part3 = val3;
             Part4 = val4;
         }
-        
+
         public SerializableGuid(Guid guid)
         {
             var bytes = guid.ToByteArray();

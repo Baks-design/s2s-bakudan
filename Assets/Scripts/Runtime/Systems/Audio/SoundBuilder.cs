@@ -4,9 +4,9 @@ namespace Game.Runtime.Systems.Audio
 {
     public class SoundBuilder
     {
-        readonly SoundManager soundManager;
-        Vector3 position = Vector3.zero;
         bool randomPitch;
+        Vector3 position = Vector3.zero;
+        readonly SoundManager soundManager;
 
         public SoundBuilder(SoundManager soundManager) => this.soundManager = soundManager;
 

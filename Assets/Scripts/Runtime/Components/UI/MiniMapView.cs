@@ -5,103 +5,34 @@ using Game.Runtime.Utilities.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.Runtime.Components.UI.Minimap
+namespace Game.Runtime.Components.UI
 {
     public class MiniMapView : MonoBehaviour
     {
+        [Header("RectTransform Roots")]
         [SerializeField] RectTransform centeredDotCanvas;
         [SerializeField] RectTransform otherDotCanvas;
+
+        [Header("Default Sprite")]
         [SerializeField] Sprite defaultSprite;
+
+        [Header("Default Dot Prefab")]
         [SerializeField] Image uiDotPrefab;
+
+        [Header("Bounds Object")]
         [SerializeField] MiniMapBounds miniMapBounds;
-        readonly Dictionary<Transform, RectTransform> redDotMap = new();
+
         KeyValuePair<Transform, RectTransform> mainMap = new();
-
-        void OnEnable()
-        {
-            if (miniMapBounds != null) return;
-            miniMapBounds = FindAnyObjectByType<MiniMapBounds>();
-        }
-
-        void Update() => UpdateTranslate();
-
-        void OnDrawGizmosSelected()
-        {
-            if (miniMapBounds == null) return;
-            var worldBounds = miniMapBounds.GetWorldRect();
-            Gizmos.DrawWireCube(worldBounds.center, worldBounds.size);
-        }
-
-        void UpdateTranslate()
-        {
-            if (mainMap.Key != null)
-            {
-                var target = mainMap.Key;
-                var redDot = mainMap.Value;
-                TranslateReverse(target, redDot);
-            }
-
-            foreach (var pair in redDotMap)
-            {
-                var target = pair.Key;
-                var redDot = pair.Value;
-                if (target != null)
-                    Translate(target, redDot);
-            }
-        }
-
-        void Translate(Transform worldObj, RectTransform dot)
-        {
-            var worldBounds = miniMapBounds.GetWorldRect();
-
-            var sizeDif = CalculateSizeDifference(worldBounds);
-
-            var originToLocalMatrix = Matrix4x4.TRS(worldBounds.center, Quaternion.identity, Vector3.one);
-            var transformedMatrix = originToLocalMatrix * worldObj.localToWorldMatrix;
-
-            ApplyDotTransform(sizeDif, transformedMatrix, dot);
-        }
-
-        void TranslateReverse(Transform worldObj, RectTransform dot)
-        {
-            var worldBounds = miniMapBounds.GetWorldRect();
-
-            var sizeDif = CalculateSizeDifference(worldBounds);
-
-            var localToOriginMatrix = Matrix4x4.TRS(-worldBounds.center, Quaternion.identity, Vector3.one);
-            var transformedMatrix = worldObj.worldToLocalMatrix * localToOriginMatrix;
-
-            ApplyDotTransform(sizeDif, transformedMatrix, dot);
-        }
-
-        Vector3 CalculateSizeDifference(Bounds worldBounds) => new(
-            otherDotCanvas.sizeDelta.x / worldBounds.size.x,
-            1f,
-            otherDotCanvas.sizeDelta.y / worldBounds.size.z
-        );
-
-        void ApplyDotTransform(Vector3 sizeDif, Matrix4x4 transformedMatrix, RectTransform dot)
-        {
-            // Compute position and rotation
-            var localPosition = Vector3.Scale(sizeDif, transformedMatrix.GetPosition()).XZ();
-            var localRotationZ = -transformedMatrix.GetRotation().eulerAngles.y;
-
-            // Apply to RectTransform
-            dot.localPosition = localPosition;
-            dot.localEulerAngles = new Vector3(0f, 0f, localRotationZ);
-        }
+        readonly Dictionary<Transform, RectTransform> redDotMap = new();
 
         /// <summary>
-        /// Follow target over the minimap, returns Generated MiniMap Image object
+        /// Follow target over the minimap, returns Generated MiniMap Image object.
         /// </summary>
-        //[Button]
         public Image FollowCentered(Transform target, Sprite icon = null)
         {
-            if (centeredDotCanvas == null)
-                throw new NullReferenceException("[MiniMapView] centeredDotCanvas is null");
-            if (uiDotPrefab == null)
-                throw new NullReferenceException("[MiniMapView] uiDotPrefab is null");
-            if (target.lossyScale.x != 1)
+            ValidateRequiredReferences();
+
+            if (target.lossyScale.x != 1f)
                 Debug.LogWarning("[MiniMapView] target.lossyScale != 1, this causes wrong positions over minimap", target);
 
             if (mainMap.Key != null)
@@ -114,16 +45,11 @@ namespace Game.Runtime.Components.UI.Minimap
         }
 
         /// <summary>
-        /// Follow target over the minimap, returns Generated MiniMap Image object
+        /// Follow target over the minimap, returns Generated MiniMap Image object.
         /// </summary>
-        //[Button]
         public Image Follow(Transform target, Sprite icon = null)
         {
-            if (otherDotCanvas == null)
-                throw new NullReferenceException("[MiniMapView] otherDotCanvas is null");
-            if (uiDotPrefab == null)
-                throw new NullReferenceException("[MiniMapView] uiDotPrefab is null");
-
+            ValidateRequiredReferences();
             UnfollowTarget(target);
 
             var uiDot = Instantiate(uiDotPrefab, otherDotCanvas);
@@ -132,30 +58,102 @@ namespace Game.Runtime.Components.UI.Minimap
             return uiDot;
         }
 
-        //[Button]
         public void UnfollowTarget(Transform target)
         {
             if (mainMap.Key == target)
             {
-                if (mainMap.Value != null)
-                    Destroy(mainMap.Value.gameObject);
+                Destroy(mainMap.Value.gameObject);
                 mainMap = new KeyValuePair<Transform, RectTransform>();
             }
             else if (redDotMap.TryGetValue(target, out var redDot))
             {
-                if (redDot != null)
-                    Destroy(redDot.gameObject);
+                Destroy(redDot.gameObject);
                 redDotMap.Remove(target);
             }
         }
 
-        //[Button]
         public void ClearTargets()
         {
             if (mainMap.Key != null)
                 UnfollowTarget(mainMap.Key);
+
             foreach (var redDot in redDotMap.ToList())
                 UnfollowTarget(redDot.Key);
+        }
+
+        void Update()
+        {
+            UpdateMainMapTarget();
+            UpdateRedDotMapTargets();
+        }
+
+        void UpdateMainMapTarget()
+        {
+            if (mainMap.Key == null)
+                return;
+
+            TranslateReverse(mainMap.Key, mainMap.Value);
+        }
+
+        void UpdateRedDotMapTargets()
+        {
+            foreach (var pair in redDotMap)
+                if (pair.Key != null)
+                    Translate(pair.Key, pair.Value);
+        }
+
+        public void Translate(Transform worldObj, RectTransform dot)
+        {
+            if (miniMapBounds == null) return;
+
+            var worldBounds = miniMapBounds.GetWorldRect();
+            var sizeDif = new Vector3(
+                otherDotCanvas.sizeDelta.x / worldBounds.size.x,
+                1f,
+                otherDotCanvas.sizeDelta.y / worldBounds.size.z
+            );
+
+            var originWorldToLocal = Matrix4x4.TRS(worldBounds.center, Quaternion.identity, Vector3.one);
+            var m = originWorldToLocal * worldObj.localToWorldMatrix;
+
+            dot.localPosition = Vector3.Scale(sizeDif, m.GetPosition()).XZ();
+            dot.localEulerAngles = new Vector3(0f, 0f, -m.GetRotation().eulerAngles.y);
+        }
+
+        public void TranslateReverse(Transform worldObj, RectTransform dot)
+        {
+            if (miniMapBounds == null) return;
+
+            var worldBounds = miniMapBounds.GetWorldRect();
+            var sizeDif = new Vector3(
+                otherDotCanvas.sizeDelta.x / worldBounds.size.x,
+                1f,
+                otherDotCanvas.sizeDelta.y / worldBounds.size.z
+            );
+
+            var originLocalToWorld = Matrix4x4.TRS(-worldBounds.center, Quaternion.identity, Vector3.one);
+            var m = worldObj.worldToLocalMatrix * originLocalToWorld;
+
+            otherDotCanvas.localPosition = Vector3.Scale(sizeDif, m.GetPosition()).XZ();
+            otherDotCanvas.localEulerAngles = new Vector3(0f, 0f, -m.GetRotation().eulerAngles.y);
+        }
+
+        void ValidateRequiredReferences()
+        {
+            if (centeredDotCanvas != null && otherDotCanvas != null && uiDotPrefab != null)
+                return;
+
+            throw new NullReferenceException(
+                "[MiniMapView] Required references (centeredDotCanvas, otherDotCanvas, or uiDotPrefab) are null.");
+        }
+
+        void OnDrawGizmosSelected()
+        {
+            if (miniMapBounds == null)
+                return;
+            
+            var worldBounds = miniMapBounds.GetWorldRect();
+            Gizmos.DrawWireCube(worldBounds.center, worldBounds.size);
         }
     }
 }

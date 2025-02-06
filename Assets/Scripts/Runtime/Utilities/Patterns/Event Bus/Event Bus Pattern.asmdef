@@ -1,11 +1,9 @@
 {
-    "name": "Event Bus Pattern",
+    "name": "Game.Runtime.Utilities.Patterns.EventBus",
     "rootNamespace": "Game.Runtime.Utilities.Patterns.EventBus",
     "references": [],
     "includePlatforms": [
         "Editor",
-        "LinuxStandalone64",
-        "WindowsStandalone32",
         "WindowsStandalone64"
     ],
     "excludePlatforms": [],

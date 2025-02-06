@@ -4,8 +4,8 @@ namespace Game.Runtime.Components.Damage
 {
     public interface IHealable
     {
-        event Action<float> OnHealed;
+        event Action<int> OnHealed;
 
-        void Heal(float healAmount);
+        void Heal(int healAmount);
     }
 }

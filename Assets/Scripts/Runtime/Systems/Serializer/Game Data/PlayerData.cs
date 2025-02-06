@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.Runtime.Systems.Serializer
 {
-    [Serializable] 
+    [Serializable]
     public struct PlayerData : ISaveable
     {
         public Vector3 position;

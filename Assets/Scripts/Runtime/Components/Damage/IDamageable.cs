@@ -5,15 +5,14 @@ namespace Game.Runtime.Components.Damage
 {
     public interface IDamageable
     {
-        float CurrentHealth { get; }
-        bool Invincible { get; set; }
-        float GetRatio { get; }
-        bool IsCritical { get; }
+        int CurrentHealth { get; }
+        bool Invincible { get; }
+        bool IsAbleToCure { get; }
 
-        event Action<float, GameObject> OnDamaged;
-        event Action OnDie;
+        event Action<int, GameObject> OnDamaged;
+        event Action OnDeath;
 
-        void TakeDamage(float damage, GameObject damageSource);
+        void TakeDamage(int damage, GameObject damageSource);
         void Kill();
     }
 }

@@ -1,5 +1,5 @@
 {
-    "name": "Persistence System Editor",
+    "name": "Game.Runtime.Systems.Persistence.Editor",
     "rootNamespace": "Game.Runtime.Systems.Persistence",
     "references": [
         "GUID:9b4dd2d915b21b84c806355af39b3ae3",

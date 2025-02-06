@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using Game.Runtime.Entities.Player.Components;
+using Game.Runtime.Utilities.Helpers;
 using KBCore.Refs;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -9,16 +9,18 @@ namespace Game.Runtime.Entities.Player.Controllers
 {
     public class SoundController : MonoBehaviour
     {
-        [SerializeField, Parent] MovementController movement;
-        [SerializeField, Parent] DetectionController detection;
-        [SerializeField, Range(0.1f, 1f)] float footstepInterval = 0.5f;
-        [SerializeField] AudioSource footstepAudioSource, landedFootstepAudioSource, landedSharedAudioSource;
-        [SerializeField] AudioResource[] audioResources;
-        [SerializeField] AudioResource landedSharedAudioResource;
-        float footstepTimer = 0f;
-        Dictionary<SurfaceTypeTag, AudioResource> tagToResourceMap;
-        readonly SurfaceTypeTag[] cachedSurfaceTags = (SurfaceTypeTag[])Enum.GetValues(typeof(SurfaceTypeTag));
-        readonly SurfaceTypeTag[] tagHandles =
+        [SerializeField, Parent] PlayerMover _playerMover;
+        [SerializeField, Parent] MovementController _movementController;
+        [SerializeField] float footstepDistance = 1.5f;
+        [SerializeField] AudioSource _footstepAudioSource;
+        [SerializeField] AudioSource _landedFootstepAudioSource;
+        [SerializeField] AudioSource _landedSharedAudioSource;
+        [SerializeField] AudioResource[] _audioResources;
+        [SerializeField] AudioResource _landedSharedAudioResource;
+        float _distanceMoved;
+        Vector3 _lastPosition;
+        Dictionary<SurfaceTypeTag, AudioResource> _tagToResourceMap;
+        readonly SurfaceTypeTag[] _tagHandles =
         {
             SurfaceTypeTag.Concrete,
             SurfaceTypeTag.Gravel,
@@ -26,73 +28,82 @@ namespace Game.Runtime.Entities.Player.Controllers
             SurfaceTypeTag.Water
         };
 
-        void OnEnable() => SubsEvents();
+        void OnEnable() => SubscribeEvents();
 
         void Start()
         {
             InitializeAudioResources();
             InitializeTagToResourceMap();
+            _lastPosition = transform.position;
         }
 
-        void Update() => DetectSurfaceForFootstepSound();
+        void Update()
+        {
+            if (_playerMover == null || _movementController == null || _footstepAudioSource == null)
+                return;
 
-        void LateUpdate() => HandleFootsteps();
+            var isGrounded = _playerMover.IsGrounded;
+            var movementVelocityMagnitude = _movementController.MovementVelocity.magnitude;
 
-        void OnDisable() => UnsubsEvents();
+            if (isGrounded && movementVelocityMagnitude > 0.1f)
+            {
+                HandleFootsteps();
+                DetectSurfaceForFootstepSound();
+            }
+        }
 
-        void SubsEvents() => movement.Landed += HandleLand;
+        void OnDisable() => UnsubscribeEvents();
 
-        void UnsubsEvents() => movement.Landed -= HandleLand;
+        void SubscribeEvents() => _movementController.OnLand += HandleLand;
 
-        void InitializeAudioResources() => landedSharedAudioSource.resource = landedSharedAudioResource;
+        void UnsubscribeEvents() => _movementController.OnLand -= HandleLand;
+
+        void HandleLand(Vector3 _) => _landedSharedAudioSource.Play();
+
+        void InitializeAudioResources() => _landedSharedAudioSource.resource = _landedSharedAudioResource;
 
         void InitializeTagToResourceMap()
         {
-            tagToResourceMap = new Dictionary<SurfaceTypeTag, AudioResource>();
-            for (var i = 0; i < tagHandles.Length && i < audioResources.Length; i++)
-                tagToResourceMap[tagHandles[i]] = audioResources[i];
+            _tagToResourceMap = new Dictionary<SurfaceTypeTag, AudioResource>();
+            for (var i = 0; i < _tagHandles.Length && i < _audioResources.Length; i++)
+                _tagToResourceMap[_tagHandles[i]] = _audioResources[i];
         }
-
-        void HandleLand() => landedSharedAudioSource.Play();
 
         void HandleFootsteps()
         {
-            if (!detection.IsGrounded || !movement.IsMoving) return;
+            _distanceMoved += Vector3.Distance(transform.position, _lastPosition);
+            _lastPosition = transform.position;
 
-            footstepTimer += Time.deltaTime;
-            if (footstepTimer >= footstepInterval)
+            if (_distanceMoved >= footstepDistance)
             {
-                footstepTimer = 0f;
-                footstepAudioSource.Play();
+                _footstepAudioSource.Play();
+                _distanceMoved = 0f;
             }
         }
 
         void DetectSurfaceForFootstepSound()
         {
-            if (!detection.IsGrounded || !detection.GroundCollider.TryGetComponent(out AudioTagObject tagObject)) return;
-
-            foreach (var surfaceTypeTag in cachedSurfaceTags)
-            {
-                if (surfaceTypeTag is SurfaceTypeTag.None)
-                    continue;
-
-                if ((tagObject.SurfaceTypeTag & surfaceTypeTag) != surfaceTypeTag ||
-                    !tagToResourceMap.TryGetValue(surfaceTypeTag, out var newResource))
-                    continue;
-
-                if (footstepAudioSource.resource != newResource)
-                    SetNewFootstepResource(newResource);
-
+            if (!_playerMover.GetColliderHit.TryGetComponent(out AudioTagObject tagObject))
                 return;
+
+            foreach (var surfaceTypeTag in _tagHandles)
+            {
+                if ((tagObject.SurfaceTypeTag & surfaceTypeTag) == surfaceTypeTag &&
+                    _tagToResourceMap.TryGetValue(surfaceTypeTag, out var newResource))
+                {
+                    if (_footstepAudioSource.resource != newResource)
+                        SetNewFootstepResource(newResource);
+                    break;
+                }
             }
         }
 
         void SetNewFootstepResource(AudioResource newResource)
         {
-            footstepAudioSource.Stop();
-            footstepAudioSource.resource = newResource;
-            landedFootstepAudioSource.resource = newResource;
-            footstepAudioSource.Play();
+            _footstepAudioSource.Stop();
+            _footstepAudioSource.resource = newResource;
+            _landedFootstepAudioSource.resource = newResource;
+            _footstepAudioSource.Play();
         }
     }
 }

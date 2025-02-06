@@ -1,5 +1,5 @@
 {
-    "name": "Spawn System",
+    "name": "Game.Runtime.Systems.Spawn",
     "rootNamespace": "Game.Runtime.Systems.Spawn",
     "references": [
         "GUID:2d75435588ce5cd489750d0278b55067",
@@ -8,7 +8,6 @@
     ],
     "includePlatforms": [
         "Editor",
-        "LinuxStandalone64",
         "WindowsStandalone64"
     ],
     "excludePlatforms": [],

@@ -4,8 +4,8 @@ namespace Game.Runtime.Systems.VFX
 {
     public class EffectBuilder
     {
-        readonly EffectManager effectManager;
         Vector3 position = Vector3.zero;
+        readonly EffectManager effectManager;
 
         public EffectBuilder(EffectManager effectManager) => this.effectManager = effectManager;
 

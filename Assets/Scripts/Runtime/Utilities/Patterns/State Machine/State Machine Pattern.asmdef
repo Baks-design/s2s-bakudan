@@ -1,13 +1,11 @@
 {
-    "name": "State Machine Pattern",
+    "name": "Game.Runtime.Utilities.Patterns.StateMachine",
     "rootNamespace": "Game.Runtime.Utilities.Patterns.StateMachine",
     "references": [
         "GUID:1f9e0dafea8706844993160462f033fe"
     ],
     "includePlatforms": [
         "Editor",
-        "LinuxStandalone64",
-        "WindowsStandalone32",
         "WindowsStandalone64"
     ],
     "excludePlatforms": [],

@@ -1,7 +1,7 @@
 using KBCore.Refs;
 using UnityEngine;
 
-namespace Game.Runtime.Components.UI.Minimap
+namespace Game.Runtime.Components.UI
 {
     public class MiniMapBounds : MonoBehaviour
     {
@@ -9,42 +9,42 @@ namespace Game.Runtime.Components.UI.Minimap
         [SerializeField] Transform topRight;
         [SerializeField] Transform bottomLeft;
 
+        void OnValidate() => DetectChildren();
+
         void OnEnable()
         {
 #if UNITY_EDITOR
-            if (tr == null) return;
-
-            if (tr.lossyScale != Vector3.one)
-                Debug.LogError("[MiniMapBounds] Transform's lossy scale must be Vector3.one to avoid incorrect minimap positions.", tr);
-            if (tr.rotation != Quaternion.identity)
-                Debug.LogError("[MiniMapBounds] Transform's rotation must be Quaternion.identity to avoid incorrect minimap positions.", tr);
+            ValidateTransform();
 #endif
-            DetectChildTransforms();
+            DetectChildren();
         }
-
-        void OnValidate() => DetectChildTransforms();
 
         void OnDrawGizmosSelected()
         {
-            if (topRight == null || bottomLeft == null) return;
-            
-            var worldBounds = GetWorldRect();
+            if (topRight == null || bottomLeft == null)
+                return;
+
+            Bounds worldBounds = GetWorldRect();
             Gizmos.DrawWireCube(worldBounds.center, worldBounds.size);
         }
 
-        void DetectChildTransforms()
+        public Bounds GetWorldRect()
         {
-            topRight = EnsureChildTransform(topRight, "TopRight", new Vector3(-1f, 0f, -1f), 0);
-            bottomLeft = EnsureChildTransform(bottomLeft, "BottomLeft", new Vector3(1f, 0f, 1f), 1);
+            var size = topRight.position - bottomLeft.position;
+            var center = bottomLeft.position + size / 2f;
+            return new Bounds(center, size);
         }
 
-        Transform EnsureChildTransform(Transform child, string name, Vector3 localPosition, int siblingIndex)
+        void DetectChildren()
         {
-            if (child != null) return child;
+            if (topRight == null)
+                topRight = CreateChildTransform("TopRight", new Vector3(1f, 0f, 1f), 0);
+            if (bottomLeft == null)
+                bottomLeft = CreateChildTransform("BottomLeft", new Vector3(-1f, 0f, -1f), 1);
+        }
 
-            if (tr.childCount > siblingIndex)
-                return tr.GetChild(siblingIndex);
-
+        Transform CreateChildTransform(string name, Vector3 localPosition, int siblingIndex)
+        {
             var obj = new GameObject(name).transform;
             obj.SetParent(tr);
             obj.localPosition = localPosition;
@@ -52,11 +52,14 @@ namespace Game.Runtime.Components.UI.Minimap
             return obj;
         }
 
-        public Bounds GetWorldRect()
+        void ValidateTransform()
         {
-            var size = topRight.position - bottomLeft.position;
-            var center = bottomLeft.position + size * 0.5f;
-            return new Bounds(center, size);
+            if (tr.lossyScale != Vector3.one)
+                Debug.LogError(
+                    "[MiniMapBounds] transform.lossyScale != Vector3.one, this causes wrong positions over minimap", tr);
+            if (tr.rotation != Quaternion.identity)
+                Debug.LogError(
+                    "[MiniMapBounds] transform.rotation != Quaternion.identity, this causes wrong positions over minimap", tr);
         }
     }
 }

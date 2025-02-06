@@ -16,7 +16,6 @@ namespace Game.Runtime.Systems.Audio
         public readonly LinkedList<SoundEmitter> FrequentSoundEmitters = new();
 
         void Start() => InitializePool();
-        
 
         public SoundBuilder CreateSoundBuilder() => new(this);
 

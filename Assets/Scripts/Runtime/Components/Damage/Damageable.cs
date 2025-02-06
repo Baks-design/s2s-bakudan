@@ -5,49 +5,53 @@ namespace Game.Runtime.Components.Damage
 {
     public class Damageable : MonoBehaviour, IDamageable, IHealable
     {
-        [SerializeField, Range(1f, 100f)] float maxHealth = 10f;
-        [SerializeField, Range(0.1f, 1f)] float criticalHealthRatio = 0.3f;
+        [SerializeField, Range(1, 100)] int maxHealth = 100;
         bool isDead;
 
-        public float CurrentHealth { get; private set; }
-        public bool Invincible { get; set; }
-        public float GetRatio => CurrentHealth / maxHealth;
-        public bool IsCritical => GetRatio <= criticalHealthRatio;
+        public int CurrentHealth { get; private set; }
+        public bool Invincible { get; private set; }
+        public bool IsDead => isDead;
+        public bool IsAbleToCure => maxHealth > 0 && ((float)CurrentHealth / maxHealth) <= 0.75f;
 
-        public event Action<float, GameObject> OnDamaged = delegate { };
-        public event Action<float> OnHealed = delegate { };
-        public event Action OnDie = delegate { };
+        public event Action OnDeath = delegate { };
+        public event Action<int, GameObject> OnDamaged = delegate { };
+        public event Action<int> OnHealed = delegate { };
 
-        void Start()
+        void Start() => Reset();
+
+        public void Reset()
         {
             CurrentHealth = maxHealth;
             isDead = false;
+            Invincible = false;
         }
 
-        public void Heal(float healAmount)
+        public void SetInvincible(bool invincible) => Invincible = invincible;
+
+        public void Heal(int healAmount)
         {
-            if (isDead)  return;
+            if (isDead || healAmount <= 0) return;
 
-            var healthBefore = CurrentHealth;
-            CurrentHealth = Mathf.Clamp(CurrentHealth + healAmount, 0f, maxHealth);
-
-            var trueHealAmount = CurrentHealth - healthBefore;
-            if (trueHealAmount > 0f)
-                OnHealed.Invoke(trueHealAmount);
+            var trueHealAmount = ApplyHealing(healAmount);
+            if (trueHealAmount > 0)
+            {
+                OnHealed?.Invoke(trueHealAmount);
+                Debug.Log($"Healed by {trueHealAmount}. Current Health: {CurrentHealth}");
+            }
         }
 
-        public void TakeDamage(float damage, GameObject damageSource)
+        public void TakeDamage(int damage, GameObject damageSource)
         {
-            if (Invincible || isDead) return;
+            if (Invincible || isDead || damage <= 0) return;
 
-            var healthBefore = CurrentHealth;
-            CurrentHealth = Mathf.Clamp(CurrentHealth - damage, 0f, maxHealth);
+            var trueDamageAmount = ApplyDamage(damage);
+            if (trueDamageAmount > 0)
+            {
+                OnDamaged?.Invoke(trueDamageAmount, damageSource);
+                Debug.Log($"Took {trueDamageAmount} damage from {damageSource.name}. Current Health: {CurrentHealth}");
+            }
 
-            var trueDamageAmount = healthBefore - CurrentHealth;
-            if (trueDamageAmount > 0f)
-                OnDamaged.Invoke(trueDamageAmount, damageSource);
-
-            if (CurrentHealth <= 0f && !isDead)
+            if (CurrentHealth <= 0 && !isDead)
                 HandleDeath();
         }
 
@@ -55,15 +59,29 @@ namespace Game.Runtime.Components.Damage
         {
             if (isDead) return;
 
-            CurrentHealth = 0f;
-            OnDamaged.Invoke(maxHealth, null);
+            CurrentHealth = 0;
             HandleDeath();
         }
 
         void HandleDeath()
         {
             isDead = true;
-            OnDie.Invoke();
+            OnDeath?.Invoke();
+            Debug.Log($"Entity {gameObject} has died!");
+        }
+
+        int ApplyHealing(int healAmount)
+        {
+            var healthBefore = CurrentHealth;
+            CurrentHealth = Mathf.Clamp(CurrentHealth + healAmount, 0, maxHealth);
+            return CurrentHealth - healthBefore;
+        }
+
+        int ApplyDamage(int damageAmount)
+        {
+            var healthBefore = CurrentHealth;
+            CurrentHealth = Mathf.Clamp(CurrentHealth - damageAmount, 0, maxHealth);
+            return healthBefore - CurrentHealth;
         }
     }
 }

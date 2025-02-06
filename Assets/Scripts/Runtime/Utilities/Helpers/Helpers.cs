@@ -28,5 +28,9 @@ namespace Game.Runtime.Utilities.Helpers
             Cursor.lockState = isLocked ? CursorLockMode.Locked : CursorLockMode.None;
             Cursor.visible = !isLocked;
         }
+
+        public static bool IsInLayerMask(GameObject obj, LayerMask layerMask) => (layerMask.value & (1 << obj.layer)) != 0;
+
+        public static float ExponentialEase(float t, float power) => Mathf.Pow(t, power);
     }
 }

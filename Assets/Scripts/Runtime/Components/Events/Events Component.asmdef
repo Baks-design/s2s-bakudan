@@ -1,0 +1,19 @@
+{
+    "name": "Game.Runtime.Components.Events",
+    "rootNamespace": "Game.Runtime.Components.Events",
+    "references": [
+        "GUID:d91b513f0c14d0944bcdf703c1a8b3e3"
+    ],
+    "includePlatforms": [
+        "Editor",
+        "WindowsStandalone64"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

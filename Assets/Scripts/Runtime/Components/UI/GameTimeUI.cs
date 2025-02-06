@@ -1,7 +1,7 @@
 using UnityEngine;
 using Game.Runtime.Utilities.Patterns.EventBus;
-using Game.Runtime.Systems.Events;
 using UnityEngine.UI;
+using Game.Runtime.Components.Events;
 
 namespace Game.Runtime.Components.UI
 {

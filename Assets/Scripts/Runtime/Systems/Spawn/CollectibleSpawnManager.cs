@@ -10,7 +10,7 @@ namespace Game.Runtime.Systems.Spawn
         EntitySpawner<Collectable> spawner;
         int counter;
         CountdownTimer spawnTimer;
-        
+
         protected override void Awake()
         {
             base.Awake();

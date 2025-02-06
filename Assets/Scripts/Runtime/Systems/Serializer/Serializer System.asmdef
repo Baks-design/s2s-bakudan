@@ -1,5 +1,5 @@
 {
-    "name": "Serializer System",
+    "name": "Game.Runtime.Systems.Serializer",
     "rootNamespace": "Game.Runtime.Systems.Serializer",
     "references": [
         "GUID:33759803a11f4d538227861a78aba30b",
@@ -7,7 +7,6 @@
     ],
     "includePlatforms": [
         "Editor",
-        "LinuxStandalone64",
         "WindowsStandalone64"
     ],
     "excludePlatforms": [],

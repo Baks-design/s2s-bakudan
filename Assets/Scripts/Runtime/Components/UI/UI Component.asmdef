@@ -1,0 +1,23 @@
+{
+    "name": "Game.Runtime.Components.UI",
+    "rootNamespace": "Game.Runtime.Components.UI",
+    "references": [
+        "GUID:d91b513f0c14d0944bcdf703c1a8b3e3",
+        "GUID:dfcdf2600492a194d9b80f7319b9837d",
+        "GUID:33759803a11f4d538227861a78aba30b",
+        "GUID:1f9e0dafea8706844993160462f033fe",
+        "GUID:4307f53044263cf4b835bd812fc161a4"
+    ],
+    "includePlatforms": [
+        "Editor",
+        "WindowsStandalone64"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

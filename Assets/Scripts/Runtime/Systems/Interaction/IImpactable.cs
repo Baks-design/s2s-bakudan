@@ -4,6 +4,6 @@ namespace Game.Runtime.Systems.Interaction
 {
     public interface IImpactable
     {
-        void ApplyForce(Vector3 throwDirection, float throwForce);
+        void ApplyForce(Vector3 direction, float force);
     }
 }

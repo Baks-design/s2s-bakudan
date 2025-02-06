@@ -1,12 +1,11 @@
 {
-    "name": "VFX System",
+    "name": "Game.Runtime.Systems.VFX",
     "rootNamespace": "Game.Runtime.Systems.VFX",
     "references": [
         "GUID:03c84b9123ed8a94caede22dff1f59c9"
     ],
     "includePlatforms": [
         "Editor",
-        "LinuxStandalone64",
         "WindowsStandalone64"
     ],
     "excludePlatforms": [],

@@ -6,11 +6,12 @@ namespace Game.Runtime.Systems.Audio
 {
     public class MusicManager : MonoBehaviour, IMusicService
     {
-        [SerializeField] List<AudioClip> initialPlaylist;
+        [SerializeField] AudioSource current;
         [SerializeField] AudioMixerGroup musicMixerGroup;
+        [SerializeField] List<AudioClip> initialPlaylist;
         float fading;
         const float crossFadeTime = 1f;
-        AudioSource current, previous;
+        AudioSource previous;
         readonly Queue<AudioClip> playlist = new();
 
         void Start()
@@ -46,11 +47,10 @@ namespace Game.Runtime.Systems.Audio
 
             previous = current;
 
-            //current = gameObject.GetOrAdd<AudioSource>();
             current.clip = clip;
-            current.outputAudioMixerGroup = musicMixerGroup; // Set mixer group
-            current.loop = false; // For playlist functionality, we want tracks to play once
-            current.volume = 0;
+            current.outputAudioMixerGroup = musicMixerGroup;
+            current.loop = false; 
+            current.volume = 0f;
             current.bypassListenerEffects = true;
             current.Play();
 
@@ -73,15 +73,16 @@ namespace Game.Runtime.Systems.Audio
 
             var fraction = Mathf.Clamp01(fading / crossFadeTime);
 
-            // Logarithmic fade
-            var logFraction = 0f;/// = fraction.ToLogarithmicFraction();
+            var logFraction = 0f;
 
-            if (previous) previous.volume = 1.0f - logFraction;
-            if (current) current.volume = logFraction;
+            if (previous)
+                previous.volume = 1f - logFraction;
+            if (current)
+                current.volume = logFraction;
 
-            if (fraction >= 1)
+            if (fraction >= 1f)
             {
-                fading = 0.0f;
+                fading = 0f;
                 if (previous)
                 {
                     Destroy(previous);
