@@ -18,7 +18,7 @@ namespace Game.Runtime.Entities.Player.Controllers
             if (movementController == null || tr == null)
                 return;
 
-            var velocity = Vector3.ProjectOnPlane(movementController.MovementVelocity, tr.parent.up);
+            var velocity = Vector3.ProjectOnPlane(movementController.GetMovementVelocity, tr.parent.up);
 
             var velocityMagnitude = velocity.magnitude;
             if (velocityMagnitude < 0.001f)

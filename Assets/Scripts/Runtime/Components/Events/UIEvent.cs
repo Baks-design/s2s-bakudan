@@ -4,6 +4,6 @@ namespace Game.Runtime.Components.Events
 {
     public struct UIEvent : IEvent
     {
-        public float currentGameTime;
+
     }
 }

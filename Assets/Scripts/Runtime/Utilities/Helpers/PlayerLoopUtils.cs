@@ -25,7 +25,7 @@ namespace Game.Runtime.Utilities.Helpers
             HandleSubSystemLoopForRemoval<T>(ref loop, systemToRemove);
         }
 
-        private static void HandleSubSystemLoopForRemoval<T>(ref PlayerLoopSystem loop, PlayerLoopSystem systemToRemove)
+        static void HandleSubSystemLoopForRemoval<T>(ref PlayerLoopSystem loop, PlayerLoopSystem systemToRemove)
         {
             if (loop.subSystemList == null) return;
             for (var i = 0; i < loop.subSystemList.Length; ++i)
@@ -47,7 +47,7 @@ namespace Game.Runtime.Utilities.Helpers
             return true;
         }
 
-        private static bool HandleSubSystemLoop<T>(ref PlayerLoopSystem loop, in PlayerLoopSystem systemToInsert, int index)
+        static bool HandleSubSystemLoop<T>(ref PlayerLoopSystem loop, in PlayerLoopSystem systemToInsert, int index)
         {
             if (loop.subSystemList == null) return false;
 
@@ -70,7 +70,7 @@ namespace Game.Runtime.Utilities.Helpers
             Debug.Log(sb.ToString());
         }
 
-        private static void PrintSubsystem(PlayerLoopSystem system, StringBuilder sb, int level)
+        static void PrintSubsystem(PlayerLoopSystem system, StringBuilder sb, int level)
         {
             sb.Append(' ', level * 2).AppendLine(system.type.ToString());
             if (system.subSystemList == null || system.subSystemList.Length == 0) 

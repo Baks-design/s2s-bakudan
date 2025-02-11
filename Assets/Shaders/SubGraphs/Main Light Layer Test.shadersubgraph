@@ -7,11 +7,7 @@
             "m_Id": "7ea1bbbacf460c879f6d8c85fd91750d"
         }
     ],
-    "m_Keywords": [
-        {
-            "m_Id": "345af8eac8db418a8d795b8f37f55ee8"
-        }
-    ],
+    "m_Keywords": [],
     "m_Dropdowns": [],
     "m_CategoryData": [
         {
@@ -134,36 +130,8 @@
     "m_ChildObjectList": [
         {
             "m_Id": "7ea1bbbacf460c879f6d8c85fd91750d"
-        },
-        {
-            "m_Id": "345af8eac8db418a8d795b8f37f55ee8"
         }
     ]
-}
-
-{
-    "m_SGVersion": 1,
-    "m_Type": "UnityEditor.ShaderGraph.ShaderKeyword",
-    "m_ObjectId": "345af8eac8db418a8d795b8f37f55ee8",
-    "m_Guid": {
-        "m_GuidSerialized": "1feaf4d7-0891-4969-9957-9a8a8b3de535"
-    },
-    "m_Name": "LightLayers",
-    "m_DefaultRefNameVersion": 0,
-    "m_RefNameGeneratedByDisplayName": "",
-    "m_DefaultReferenceName": "BOOLEAN_DC7B8ACB_ON",
-    "m_OverrideReferenceName": "_LIGHT_LAYERS",
-    "m_GeneratePropertyBlock": false,
-    "m_UseCustomSlotLabel": false,
-    "m_CustomSlotLabel": "",
-    "m_DismissedVersion": 0,
-    "m_KeywordType": 0,
-    "m_KeywordDefinition": 1,
-    "m_KeywordScope": 1,
-    "m_KeywordStages": 2,
-    "m_Entries": [],
-    "m_Value": 0,
-    "m_IsEditable": true
 }
 
 {

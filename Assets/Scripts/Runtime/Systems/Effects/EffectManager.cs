@@ -6,6 +6,7 @@ namespace Game.Runtime.Systems.VFX
     public class EffectManager : MonoBehaviour, IEffectService
     {
         [SerializeField] EffectEmitter effectEmitterPrefab;
+        [SerializeField] bool collectionCheck = true;
         [SerializeField] int defaultCapacity = 10;
         [SerializeField] int maxPoolSize = 100;
         IObjectPool<EffectEmitter> effectEmitterPool;
@@ -16,7 +17,7 @@ namespace Game.Runtime.Systems.VFX
 
         void InitializePools() => effectEmitterPool = new ObjectPool<EffectEmitter>(
             CreateVisualEffectEmitter, OnTakeFromPool, OnReturnedToPool, DestroyEmitter,
-            true, defaultCapacity, maxPoolSize);
+            collectionCheck, defaultCapacity, maxPoolSize);
 
         EffectEmitter CreateVisualEffectEmitter() => Instantiate(effectEmitterPrefab);
 

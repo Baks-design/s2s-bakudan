@@ -128,6 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52b5c089f7e883a4bb55f3b8dd7a9848, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tr: {fileID: 666760559430451709}
   _playerMover: {fileID: 6761828267642803458}
   _movementController: {fileID: 43488032293543262}
   footstepDistance: 1
@@ -137,6 +138,12 @@ MonoBehaviour:
   _audioResources:
   - {fileID: 6418180475301049370, guid: db444f57b700efd4e87d68601feac8f6, type: 2}
   _landedSharedAudioResource: {fileID: 6418180475301049370, guid: 47cb3b798105fdf489c09da10f5f9555, type: 2}
+  footstepsDistanceDebugText:
+    serializedVersion: 2
+    x: 10
+    y: 45
+    width: 200
+    height: 20
 --- !u!1 &3327198154517549530
 GameObject:
   m_ObjectHideFlags: 0
@@ -281,7 +288,7 @@ GameObject:
   - component: {fileID: 3990709321205815069}
   - component: {fileID: 43488032293543262}
   - component: {fileID: 6683152969982936860}
-  - component: {fileID: 3924743802413669460}
+  - component: {fileID: 6688533882532183093}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -420,6 +427,13 @@ MonoBehaviour:
   _slideGravity: 5
   _slopeLimit: 30
   _useLocalMomentum: 0
+  isShowDebug: 1
+  stateDebugText:
+    serializedVersion: 2
+    x: 10
+    y: 15
+    width: 200
+    height: 20
 --- !u!114 &6683152969982936860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -433,17 +447,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tr: {fileID: 7908236507594790574}
-  inputReader: {fileID: 11400000, guid: f50d315ded60aeb4aafa7f426bfe96a0, type: 2}
   interactableLayer:
     serializedVersion: 2
     m_Bits: 8
   sphereRadius: 2
-  followSpeed: 5
-  spacing: 1.5
-  throwForce: 5
-  upwardThrowAngle: 0.5
-  drawDebugGizmos: 0
---- !u!114 &3924743802413669460
+--- !u!114 &6688533882532183093
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -452,10 +460,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4249134364593418480}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb8ce552d4f10294580130fc38c8579e, type: 3}
+  m_Script: {fileID: 11500000, guid: a585ee4e5fbbcfd43a35fca8f4a240a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 10
+  maxHealth: 100
 --- !u!1 &6632696312597937862
 GameObject:
   m_ObjectHideFlags: 0
@@ -810,6 +818,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9100000, guid: 4f2ad23829b3b964987f922dcef6a822, type: 2}
     - target: {fileID: 5866666021909216657, guid: 258c890204edddd408435293e82eb3dd, type: 3}
+      propertyPath: m_CullingMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 258c890204edddd408435293e82eb3dd, type: 3}
+      propertyPath: m_AnimatePhysics
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 258c890204edddd408435293e82eb3dd, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
@@ -850,9 +866,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 87287946853464715}
   movementController: {fileID: 43488032293543262}
-  collectableController: {fileID: 6683152969982936860}
   playerMover: {fileID: 6761828267642803458}
-  damageable: {fileID: 3924743802413669460}
+  damageable: {fileID: 6688533882532183093}
+  stateDebugText:
+    serializedVersion: 2
+    x: 10
+    y: 30
+    width: 200
+    height: 20
 --- !u!1001 &8911193882292535408
 PrefabInstance:
   m_ObjectHideFlags: 0

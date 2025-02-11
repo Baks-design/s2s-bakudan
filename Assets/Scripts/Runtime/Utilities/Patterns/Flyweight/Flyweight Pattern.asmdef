@@ -1,0 +1,17 @@
+{
+    "name": "Game.Runtime.Utilities.Patterns.Flyweight",
+    "rootNamespace": "Game.Runtime.Utilities.Patterns.Flyweight",
+    "references": [],
+    "includePlatforms": [
+        "Editor",
+        "WindowsStandalone64"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

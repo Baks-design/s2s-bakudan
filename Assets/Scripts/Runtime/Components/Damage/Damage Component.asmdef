@@ -1,7 +1,10 @@
 {
     "name": "Game.Runtime.Components.Damage",
     "rootNamespace": "Game.Runtime.Components.Damage",
-    "references": [],
+    "references": [
+        "GUID:d91b513f0c14d0944bcdf703c1a8b3e3",
+        "GUID:dfcdf2600492a194d9b80f7319b9837d"
+    ],
     "includePlatforms": [
         "Editor",
         "WindowsStandalone64"

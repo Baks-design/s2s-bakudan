@@ -45,4 +45,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputReader: {fileID: 11400000, guid: f50d315ded60aeb4aafa7f426bfe96a0, type: 2}
-  playerLoader: {fileID: 0}
+  isShowDebug: 1
+  stateDebugText:
+    serializedVersion: 2
+    x: 10
+    y: 0
+    width: 200
+    height: 20

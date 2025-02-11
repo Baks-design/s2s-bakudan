@@ -10,16 +10,11 @@ namespace Game.Runtime.Entities.Player.Components
         [SerializeField, Self] Rigidbody rb;
         [SerializeField, Self] Transform tr;
         [SerializeField, Self] CapsuleCollider col;
-
-        [Header("Collider Settings:")]
         [SerializeField, Range(0f, 1f)] float stepHeightRatio = 0.1f;
         [SerializeField] float colliderHeight = 2f;
         [SerializeField] float colliderThickness = 1f;
         [SerializeField] Vector3 colliderOffset = Vector3.zero;
-
-        [Header("Sensor Settings:")]
         [SerializeField] bool isInDebugMode;
-        
         bool isUsingExtendedSensorRange = true;
         bool isGrounded;
         int currentLayer;

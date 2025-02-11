@@ -9,6 +9,7 @@ namespace Game.Runtime.Entities.Player.Controllers
 {
     public class SoundController : MonoBehaviour
     {
+        [SerializeField, Self] Transform tr;
         [SerializeField, Parent] PlayerMover _playerMover;
         [SerializeField, Parent] MovementController _movementController;
         [SerializeField] float footstepDistance = 1.5f;
@@ -17,6 +18,7 @@ namespace Game.Runtime.Entities.Player.Controllers
         [SerializeField] AudioSource _landedSharedAudioSource;
         [SerializeField] AudioResource[] _audioResources;
         [SerializeField] AudioResource _landedSharedAudioResource;
+        [SerializeField] Rect footstepsDistanceDebugText = new(10f, 10f, 200f, 20f);
         float _distanceMoved;
         Vector3 _lastPosition;
         Dictionary<SurfaceTypeTag, AudioResource> _tagToResourceMap;
@@ -34,7 +36,7 @@ namespace Game.Runtime.Entities.Player.Controllers
         {
             InitializeAudioResources();
             InitializeTagToResourceMap();
-            _lastPosition = transform.position;
+            _lastPosition = tr.position;
         }
 
         void Update()
@@ -43,7 +45,7 @@ namespace Game.Runtime.Entities.Player.Controllers
                 return;
 
             var isGrounded = _playerMover.IsGrounded;
-            var movementVelocityMagnitude = _movementController.MovementVelocity.magnitude;
+            var movementVelocityMagnitude = _movementController.GetMovementVelocity.magnitude;
 
             if (isGrounded && movementVelocityMagnitude > 0.1f)
             {
@@ -53,6 +55,8 @@ namespace Game.Runtime.Entities.Player.Controllers
         }
 
         void OnDisable() => UnsubscribeEvents();
+
+        void OnGUI() => GUI.Label(footstepsDistanceDebugText, $"Distance To Play Footsteps: {_distanceMoved}");
 
         void SubscribeEvents() => _movementController.OnLand += HandleLand;
 
@@ -71,8 +75,8 @@ namespace Game.Runtime.Entities.Player.Controllers
 
         void HandleFootsteps()
         {
-            _distanceMoved += Vector3.Distance(transform.position, _lastPosition);
-            _lastPosition = transform.position;
+            _distanceMoved += Vector3.Distance(tr.position, _lastPosition);
+            _lastPosition = tr.position;
 
             if (_distanceMoved >= footstepDistance)
             {

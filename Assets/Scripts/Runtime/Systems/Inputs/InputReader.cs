@@ -7,44 +7,56 @@ using static Game.Runtime.Systems.Management.PlayerInputActions;
 namespace Game.Runtime.Systems.Inputs
 {
     [CreateAssetMenu(menuName = "Data/System/InputReader")]
-    public class InputReader : ScriptableObject, IPlayerActions, IInputReader
+    public class InputReader : ScriptableObject, IPlayerActions, IUIActions
     {
         public PlayerInputActions inputActions;
 
         public Vector2 Direction => inputActions.Player.Move.ReadValue<Vector2>();
         public Vector2 LookDirection => inputActions.Player.Look.ReadValue<Vector2>();
 
-        public event Action<bool> OpenMenu = delegate { };
+        //Player
+        public event Action OpenMenu = delegate { };
         public event Action<Vector2> Move = delegate { };
         public event Action<Vector2, bool> Look = delegate { };
         public event Action<bool> Throw = delegate { };
+        //UI
+        public event Action CloseMenu = delegate { };
 
-        public void EnablePlayerActions()
+        void OnEnable() => SetupMaps();
+
+        void OnDisable() => DisableMaps();
+
+        void SetupMaps()
         {
             if (inputActions == null)
             {
                 inputActions = new PlayerInputActions();
                 inputActions.Player.SetCallbacks(this);
             }
-            inputActions.Enable();
         }
 
-        public void ChangeToPlayerMap()
+        public void EnablePlayerMap()
         {
             inputActions.Player.Enable();
             inputActions.UI.Disable();
         }
 
-        public void ChangeToUIMap()
+        public void EnableUIMap()
         {
             inputActions.Player.Disable();
             inputActions.UI.Enable();
         }
 
+        public void DisableMaps()
+        {
+            inputActions.Player.Disable();
+            inputActions.UI.Disable();
+        }
+
         public void OnOpenMenu(InputAction.CallbackContext context)
         {
             if (context.phase is InputActionPhase.Started)
-                OpenMenu.Invoke(true);
+                OpenMenu.Invoke();
         }
 
         public void OnMove(InputAction.CallbackContext context) => Move.Invoke(context.ReadValue<Vector2>());
@@ -64,6 +76,44 @@ namespace Game.Runtime.Systems.Inputs
                     Throw.Invoke(false);
                     break;
             }
+        }
+        
+        public void OnClick(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnRightClick(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnMiddleClick(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnScrollWheel(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnPoint(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnNavigate(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnSubmit(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnCancel(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnCloseMenu(InputAction.CallbackContext context)
+        {
+            if (context.phase is InputActionPhase.Started)
+                CloseMenu.Invoke();
         }
     }
 }

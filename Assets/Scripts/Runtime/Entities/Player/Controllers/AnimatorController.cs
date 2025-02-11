@@ -2,8 +2,6 @@ using KBCore.Refs;
 using UnityEngine;
 using Game.Runtime.Components.Damage;
 using Game.Runtime.Utilities.Helpers;
-using Game.Runtime.Systems.Interaction;
-using System.Collections;
 using Game.Runtime.Entities.Player.Components;
 
 namespace Game.Runtime.Entities.Player.Controllers
@@ -12,15 +10,17 @@ namespace Game.Runtime.Entities.Player.Controllers
     {
         [SerializeField, Self] Animator animator;
         [SerializeField, Parent] MovementController movementController;
-        [SerializeField, Parent] CollectableController collectableController;
         [SerializeField, Parent] PlayerMover playerMover;
         [SerializeField, Parent] Damageable damageable;
+        [SerializeField] Rect stateDebugText = new(10f, 10f, 200f, 20f);
 
         void OnEnable() => SubscribeToEvents();
 
         void Update() => ResetPlayerVelocity();
 
         void OnDisable() => UnsubscribeFromEvents();
+
+        void OnGUI() => GUI.Label(stateDebugText, $"Current Animator State: {animator.GetCurrentAnimatorStateInfo(0)}");
 
         void ResetPlayerVelocity()
         {
@@ -32,8 +32,6 @@ namespace Game.Runtime.Entities.Player.Controllers
         void SubscribeToEvents()
         {
             damageable.OnDeath += HandleDeath;
-            collectableController.OnLiftUp += HandleLiftUp;
-            collectableController.OnThrow += HandleThrow;
             movementController.OnIdle += HandleIdle;
             movementController.OnRun += HandleRun;
         }
@@ -41,8 +39,6 @@ namespace Game.Runtime.Entities.Player.Controllers
         void UnsubscribeFromEvents()
         {
             damageable.OnDeath -= HandleDeath;
-            collectableController.OnLiftUp -= HandleLiftUp;
-            collectableController.OnThrow -= HandleThrow;
             movementController.OnIdle -= HandleIdle;
             movementController.OnRun -= HandleRun;
         }
@@ -53,19 +49,11 @@ namespace Game.Runtime.Entities.Player.Controllers
 
         void HandleDeath() => animator.CrossFade(AnimatorStateHashes.DyingState, 0f);
 
-        void HandleLiftUp() => animator.CrossFade(AnimatorStateHashes.LiftState, 0f);
-
-        void HandleThrow()
-        {
-            animator.CrossFade(AnimatorStateHashes.ThrowState, 0f);
-            StartCoroutine(TransitionToState(AnimatorStateHashes.IdleState));
-        }
-
-        IEnumerator TransitionToState(int nextState)
-        {
-            var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            yield return WaitFor.Seconds(stateInfo.length);
-            animator.CrossFade(nextState, 0f);
-        }
+        // IEnumerator TransitionToState(int nextState)
+        // {
+        //     var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        //     yield return WaitFor.Seconds(stateInfo.length);
+        //     animator.CrossFade(nextState, 0f);
+        // }
     }
 }

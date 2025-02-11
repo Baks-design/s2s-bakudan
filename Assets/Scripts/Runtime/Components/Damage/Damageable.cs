@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.Runtime.Components.Damage
 {
-    public class Damageable : MonoBehaviour, IDamageable, IHealable
+    public abstract class Damageable : MonoBehaviour, IDamageable, IHealable
     {
         [SerializeField, Range(1, 100)] int maxHealth = 100;
         bool isDead;
@@ -17,7 +17,7 @@ namespace Game.Runtime.Components.Damage
         public event Action<int, GameObject> OnDamaged = delegate { };
         public event Action<int> OnHealed = delegate { };
 
-        void Start() => Reset();
+        protected virtual void Start() => Reset();
 
         public void Reset()
         {

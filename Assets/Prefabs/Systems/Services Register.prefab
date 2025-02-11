@@ -45,3 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  musicManager: {fileID: 0}
+  soundManager: {fileID: 0}
+  effectsManager: {fileID: 0}
+  sceneLoaderManager: {fileID: 0}
+  flyweightFactory: {fileID: 0}

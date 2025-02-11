@@ -13,11 +13,7 @@
             "m_Id": "a0fd0a9db75649e1a9aadb67fa6e690a"
         }
     ],
-    "m_Keywords": [
-        {
-            "m_Id": "46eb1567d4ed4e95bb32bc8456818e88"
-        }
-    ],
+    "m_Keywords": [],
     "m_Dropdowns": [],
     "m_CategoryData": [
         {
@@ -575,31 +571,6 @@
 }
 
 {
-    "m_SGVersion": 1,
-    "m_Type": "UnityEditor.ShaderGraph.ShaderKeyword",
-    "m_ObjectId": "46eb1567d4ed4e95bb32bc8456818e88",
-    "m_Guid": {
-        "m_GuidSerialized": "8a237b8b-0962-47e4-8a46-0459275150e6"
-    },
-    "m_Name": "LIGHTMAP_SHADOW_MIXING",
-    "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "LIGHTMAP_SHADOW_MIXING",
-    "m_DefaultReferenceName": "_LIGHTMAP_SHADOW_MIXING",
-    "m_OverrideReferenceName": "",
-    "m_GeneratePropertyBlock": true,
-    "m_UseCustomSlotLabel": false,
-    "m_CustomSlotLabel": "",
-    "m_DismissedVersion": 0,
-    "m_KeywordType": 0,
-    "m_KeywordDefinition": 1,
-    "m_KeywordScope": 1,
-    "m_KeywordStages": 63,
-    "m_Entries": [],
-    "m_Value": 0,
-    "m_IsEditable": true
-}
-
-{
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.UVMaterialSlot",
     "m_ObjectId": "49423d01c4fd4a22a71b73976f0243bf",
@@ -638,9 +609,6 @@
         },
         {
             "m_Id": "a0fd0a9db75649e1a9aadb67fa6e690a"
-        },
-        {
-            "m_Id": "46eb1567d4ed4e95bb32bc8456818e88"
         }
     ]
 }

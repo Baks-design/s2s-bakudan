@@ -29,10 +29,10 @@ namespace Game.Runtime.Entities.Player.Components
             Gizmos.DrawRay(tr.position, -tr.up * 2f);
 
             Gizmos.color = Color.cyan;
-            Quaternion leftRotation = Quaternion.AngleAxis(-ceilingAngleLimit, tr.right);
-            Quaternion rightRotation = Quaternion.AngleAxis(ceilingAngleLimit, tr.right);
-            Vector3 leftDirection = leftRotation * -tr.up;
-            Vector3 rightDirection = rightRotation * -tr.up;
+            var leftRotation = Quaternion.AngleAxis(-ceilingAngleLimit, tr.right);
+            var rightRotation = Quaternion.AngleAxis(ceilingAngleLimit, tr.right);
+            var leftDirection = leftRotation * -tr.up;
+            var rightDirection = rightRotation * -tr.up;
             Gizmos.DrawRay(tr.position, leftDirection * 2f);
             Gizmos.DrawRay(tr.position, rightDirection * 2f);
         }

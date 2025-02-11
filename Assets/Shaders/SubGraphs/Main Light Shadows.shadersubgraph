@@ -10,14 +10,7 @@
             "m_Id": "f0e0b7c9dc84459b9872e8ec2c4fb3ca"
         }
     ],
-    "m_Keywords": [
-        {
-            "m_Id": "fd52011850ba44c28114430ca2d357f2"
-        },
-        {
-            "m_Id": "70080533ec814c13a94c4028ed1d264b"
-        }
-    ],
+    "m_Keywords": [],
     "m_Dropdowns": [],
     "m_CategoryData": [
         {
@@ -208,12 +201,6 @@
         },
         {
             "m_Id": "f0e0b7c9dc84459b9872e8ec2c4fb3ca"
-        },
-        {
-            "m_Id": "70080533ec814c13a94c4028ed1d264b"
-        },
-        {
-            "m_Id": "fd52011850ba44c28114430ca2d357f2"
         }
     ]
 }
@@ -478,47 +465,6 @@
 }
 
 {
-    "m_SGVersion": 1,
-    "m_Type": "UnityEditor.ShaderGraph.ShaderKeyword",
-    "m_ObjectId": "70080533ec814c13a94c4028ed1d264b",
-    "m_Guid": {
-        "m_GuidSerialized": "3678795c-ea8d-481d-ba86-f0b64554d241"
-    },
-    "m_Name": "Shadows Enum",
-    "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "Shadows Enum",
-    "m_DefaultReferenceName": "_SHADOWS_ENUM",
-    "m_OverrideReferenceName": "_MAIN_LIGHT",
-    "m_GeneratePropertyBlock": true,
-    "m_UseCustomSlotLabel": false,
-    "m_CustomSlotLabel": "",
-    "m_DismissedVersion": 0,
-    "m_KeywordType": 1,
-    "m_KeywordDefinition": 1,
-    "m_KeywordScope": 1,
-    "m_KeywordStages": 63,
-    "m_Entries": [
-        {
-            "id": 1,
-            "displayName": "SHADOWS",
-            "referenceName": "SHADOWS"
-        },
-        {
-            "id": 4,
-            "displayName": "SHADOWS_CASCADE",
-            "referenceName": "SHADOWS_CASCADE"
-        },
-        {
-            "id": 3,
-            "displayName": "SHADOWS_SCREEN",
-            "referenceName": "SHADOWS_SCREEN"
-        }
-    ],
-    "m_Value": 0,
-    "m_IsEditable": true
-}
-
-{
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector3MaterialSlot",
     "m_ObjectId": "7d190f51c889ce8198ca0ecfe494d421",
@@ -754,30 +700,5 @@
         "z": 1.0,
         "w": 1.0
     }
-}
-
-{
-    "m_SGVersion": 1,
-    "m_Type": "UnityEditor.ShaderGraph.ShaderKeyword",
-    "m_ObjectId": "fd52011850ba44c28114430ca2d357f2",
-    "m_Guid": {
-        "m_GuidSerialized": "4cdeb2ff-a6fa-4fcb-8108-78394fdebc34"
-    },
-    "m_Name": "Shadows Soft",
-    "m_DefaultRefNameVersion": 0,
-    "m_RefNameGeneratedByDisplayName": "",
-    "m_DefaultReferenceName": "BOOLEAN_71BC2F5C_ON",
-    "m_OverrideReferenceName": "_SHADOWS_SOFT",
-    "m_GeneratePropertyBlock": false,
-    "m_UseCustomSlotLabel": false,
-    "m_CustomSlotLabel": "",
-    "m_DismissedVersion": 0,
-    "m_KeywordType": 0,
-    "m_KeywordDefinition": 1,
-    "m_KeywordScope": 1,
-    "m_KeywordStages": 2,
-    "m_Entries": [],
-    "m_Value": 0,
-    "m_IsEditable": true
 }
 

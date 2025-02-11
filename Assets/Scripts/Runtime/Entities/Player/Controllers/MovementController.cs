@@ -3,14 +3,14 @@ using System;
 using Game.Runtime.Entities.Player.Components;
 using Game.Runtime.Utilities.Helpers;
 using Game.Runtime.Utilities.Patterns.StateMachines;
-using KBCore.Refs;
 using Game.Runtime.Entities.Player.States;
 using Game.Runtime.Systems.Inputs;
 using Game.Runtime.Systems.Interaction;
+using KBCore.Refs;
 
 namespace Game.Runtime.Entities.Player.Controllers
 {
-    public class MovementController : StatefulEntity, IImpactable
+    public class MovementController : StatefulEntity, IImpactable //BUG: Dont Move
     {
         [SerializeField, Self] Transform tr;
         [SerializeField, Self] PlayerMover _playerMover;
@@ -24,17 +24,20 @@ namespace Game.Runtime.Entities.Player.Controllers
         [SerializeField] float _gravity = 30f;
         [SerializeField] float _slideGravity = 5f;
         [SerializeField] float _slopeLimit = 30f;
-        [SerializeField] bool _useLocalMomentum;
+        [SerializeField] bool _useLocalMomentum = false;
+        [SerializeField] bool isShowDebug = true;
+        [SerializeField] Rect stateDebugText = new(10f, 10f, 200f, 20f);
+        bool _isRunning;
         Vector3 _momentum;
         Vector3 _savedMovementVelocity;
-        bool _isRunning;
+        Vector3 savedVelocity;
 
-        public Vector3 Velocity { get; set; }
-        public Vector3 Momentum => _useLocalMomentum ? tr.localToWorldMatrix * _momentum : _momentum;
-        public Vector3 MovementVelocity => _savedMovementVelocity;
+        public Vector3 GetVelocity => savedVelocity;
+        public Vector3 GetMomentum => _useLocalMomentum ? tr.localToWorldMatrix * _momentum : _momentum;
+        public Vector3 GetMovementVelocity => _savedMovementVelocity;
         bool IsGrounded => StateMachine.CurrentState is GroundedState or SlidingState;
-        bool IsRising => VectorMath.GetDotProduct(Momentum, tr.up) > 0f;
-        bool IsFalling => VectorMath.GetDotProduct(Momentum, tr.up) < 0f;
+        bool IsRising => VectorMath.GetDotProduct(GetMomentum, tr.up) > 0f;
+        bool IsFalling => VectorMath.GetDotProduct(GetMomentum, tr.up) < 0f;
         bool IsGroundTooSteep => !_playerMover.IsGrounded || Vector3.Angle(_playerMover.GetGroundNormal, tr.up) > _slopeLimit;
 
         public event Action<Vector3> OnLand = delegate { };
@@ -53,20 +56,17 @@ namespace Game.Runtime.Entities.Player.Controllers
             SetupStateMachine();
         }
 
-        void OnEnable() => _input.EnablePlayerActions();
-
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
 
             _playerMover.CheckForGround();
 
-            var isGrounded = IsGrounded;
-            HandleMomentum(isGrounded);
+            HandleMomentum();
 
-            Velocity = isGrounded ? CalculateMovementVelocity() : Vector3.zero;
-            Velocity += _useLocalMomentum ? tr.localToWorldMatrix * _momentum : _momentum;
-            
+            var velocity = StateMachine.CurrentState is GroundedState ? CalculateMovementVelocity() : Vector3.zero;
+            velocity += _useLocalMomentum ? tr.localToWorldMatrix * _momentum : _momentum;
+
             if (_input.Direction != Vector2.zero)
             {
                 if (!_isRunning)
@@ -84,15 +84,22 @@ namespace Game.Runtime.Entities.Player.Controllers
                 }
             }
 
-            _playerMover.SetExtendSensorRange(isGrounded);
-            _playerMover.SetVelocity(Velocity);
+            _playerMover.SetExtendSensorRange(IsGrounded);
+            _playerMover.SetVelocity(velocity);
 
+            savedVelocity = velocity;
             _savedMovementVelocity = CalculateMovementVelocity();
 
             _ceilingDetector.ResetCeilingDetection();
         }
 
         protected override void Update() => base.Update();
+
+        void OnGUI()
+        {
+            if (!isShowDebug) return;
+            GUI.Label(stateDebugText, $"Current Player State: {StateMachine.CurrentState}");
+        }
 
         void SetupStateMachine()
         {
@@ -133,7 +140,7 @@ namespace Game.Runtime.Entities.Player.Controllers
             return direction.magnitude > 1f ? direction.normalized : direction;
         }
 
-        void HandleMomentum(bool isGrounded)
+        void HandleMomentum()
         {
             var localToWorldMatrix = tr.localToWorldMatrix;
             var worldToLocalMatrix = tr.worldToLocalMatrix;
@@ -145,16 +152,16 @@ namespace Game.Runtime.Entities.Player.Controllers
             var horizontalMomentum = _momentum - verticalMomentum;
 
             verticalMomentum -= tr.up * (_gravity * Time.fixedDeltaTime);
-            if (isGrounded && VectorMath.GetDotProduct(verticalMomentum, tr.up) < 0f)
+            if (IsGrounded && VectorMath.GetDotProduct(verticalMomentum, tr.up) < 0f)
                 verticalMomentum = Vector3.zero;
 
-            if (!isGrounded)
+            if (!IsGrounded)
                 AdjustHorizontalMomentum(ref horizontalMomentum, CalculateMovementVelocity());
 
             if (StateMachine.CurrentState is SlidingState)
                 HandleSliding(ref horizontalMomentum);
 
-            var friction = isGrounded ? _groundFriction : _airFriction;
+            var friction = IsGrounded ? _groundFriction : _airFriction;
             horizontalMomentum = Vector3.MoveTowards(horizontalMomentum, Vector3.zero, friction * Time.fixedDeltaTime);
 
             _momentum = horizontalMomentum + verticalMomentum;
@@ -178,7 +185,7 @@ namespace Game.Runtime.Entities.Player.Controllers
             if (_useLocalMomentum)
                 _momentum = tr.localToWorldMatrix * _momentum;
 
-            var velocity = MovementVelocity;
+            var velocity = GetMovementVelocity;
             if (velocity.sqrMagnitude >= 0f && _momentum.sqrMagnitude > 0f)
             {
                 var projectedMomentum = Vector3.Project(_momentum, velocity.normalized);

@@ -44,7 +44,7 @@ namespace Game.Runtime.Utilities.Patterns.StateMachines
             currentNode.State?.OnEnter();
         }
 
-        void ChangeState(IState state)
+        public void ChangeState(IState state)
         {
             if (state == currentNode.State)
                 return;
