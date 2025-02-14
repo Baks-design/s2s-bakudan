@@ -46,7 +46,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 4249134364593418480, guid: e28147ae93ed998468c229524867c981, type: 3}
-  vcam: {fileID: 0}
   spawnPos: {fileID: 5382630379004095660}
 --- !u!1 &5869213395666678062
 GameObject:

@@ -5,14 +5,10 @@ namespace Game.Runtime.Systems.Management.States
 {
     public class PauseState : IState
     {
-        public PauseState(GameManager manager) { }
+        readonly GameManager manager;
 
-        public void OnEnter()
-        {
-            Helpers.CursorLock(false);
-            Helpers.IsPauseTime(true);
-        }
+        public PauseState(GameManager manager) => this.manager = manager;
 
-        public void Update() => Helpers.CursorLock(false);
+        public void Update() => Helpers.UnlockCursor();
     }
 }

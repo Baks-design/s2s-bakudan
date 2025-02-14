@@ -18,7 +18,6 @@ namespace Game.Runtime.Entities.Player.Controllers
         [SerializeField] AudioSource _landedSharedAudioSource;
         [SerializeField] AudioResource[] _audioResources;
         [SerializeField] AudioResource _landedSharedAudioResource;
-        [SerializeField] Rect footstepsDistanceDebugText = new(10f, 10f, 200f, 20f);
         float _distanceMoved;
         Vector3 _lastPosition;
         Dictionary<SurfaceTypeTag, AudioResource> _tagToResourceMap;
@@ -39,24 +38,9 @@ namespace Game.Runtime.Entities.Player.Controllers
             _lastPosition = tr.position;
         }
 
-        void Update()
-        {
-            if (_playerMover == null || _movementController == null || _footstepAudioSource == null)
-                return;
-
-            var isGrounded = _playerMover.IsGrounded;
-            var movementVelocityMagnitude = _movementController.GetMovementVelocity.magnitude;
-
-            if (isGrounded && movementVelocityMagnitude > 0.1f)
-            {
-                HandleFootsteps();
-                DetectSurfaceForFootstepSound();
-            }
-        }
+        void Update() => HandleFootsteps();
 
         void OnDisable() => UnsubscribeEvents();
-
-        void OnGUI() => GUI.Label(footstepsDistanceDebugText, $"Distance To Play Footsteps: {_distanceMoved}");
 
         void SubscribeEvents() => _movementController.OnLand += HandleLand;
 
@@ -74,6 +58,18 @@ namespace Game.Runtime.Entities.Player.Controllers
         }
 
         void HandleFootsteps()
+        {
+            var isGrounded = _playerMover.IsGrounded;
+            var movementVelocityMagnitude = _movementController.GetMovementVelocity.magnitude;
+
+            if (isGrounded && movementVelocityMagnitude > 0.1f)
+            {
+                PlayFootsteps();
+                DetectSurfaceForFootstepSound();
+            }
+        }
+
+        void PlayFootsteps()
         {
             _distanceMoved += Vector3.Distance(tr.position, _lastPosition);
             _lastPosition = tr.position;

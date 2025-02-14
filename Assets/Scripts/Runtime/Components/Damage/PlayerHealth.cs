@@ -9,6 +9,6 @@ namespace Game.Runtime.Components.Damage
 
         void Update() => HandleHealth();
 
-        void HandleHealth() => EventBus<PlayerEvent>.Raise(new PlayerEvent { Health = CurrentHealth });
+        void HandleHealth() => EventBus<PlayerHealthEvent>.Raise(new PlayerHealthEvent { currentHealth = CurrentHealth });
     }
 }

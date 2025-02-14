@@ -13,6 +13,8 @@ namespace Game.Runtime.Systems.Inputs
 
         public Vector2 Direction => inputActions.Player.Move.ReadValue<Vector2>();
         public Vector2 LookDirection => inputActions.Player.Look.ReadValue<Vector2>();
+        public bool IsPlayerMapActive { get; set; }
+        public bool IsUIMapActive { get; set; }
 
         //Player
         public event Action OpenMenu = delegate { };
@@ -32,6 +34,7 @@ namespace Game.Runtime.Systems.Inputs
             {
                 inputActions = new PlayerInputActions();
                 inputActions.Player.SetCallbacks(this);
+                inputActions.UI.SetCallbacks(this);
             }
         }
 
@@ -39,18 +42,24 @@ namespace Game.Runtime.Systems.Inputs
         {
             inputActions.Player.Enable();
             inputActions.UI.Disable();
+            IsPlayerMapActive = true;
+            IsUIMapActive = false;
         }
 
         public void EnableUIMap()
         {
             inputActions.Player.Disable();
             inputActions.UI.Enable();
+            IsPlayerMapActive = false;
+            IsUIMapActive = true;
         }
 
         public void DisableMaps()
         {
             inputActions.Player.Disable();
             inputActions.UI.Disable();
+            IsPlayerMapActive = false;
+            IsUIMapActive = false;
         }
 
         public void OnOpenMenu(InputAction.CallbackContext context)

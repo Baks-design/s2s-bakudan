@@ -10,7 +10,7 @@ using KBCore.Refs;
 
 namespace Game.Runtime.Entities.Player.Controllers
 {
-    public class MovementController : StatefulEntity, IImpactable //BUG: Dont Move
+    public class MovementController : StatefulEntity
     {
         [SerializeField, Self] Transform tr;
         [SerializeField, Self] PlayerMover _playerMover;
@@ -25,8 +25,6 @@ namespace Game.Runtime.Entities.Player.Controllers
         [SerializeField] float _slideGravity = 5f;
         [SerializeField] float _slopeLimit = 30f;
         [SerializeField] bool _useLocalMomentum = false;
-        [SerializeField] bool isShowDebug = true;
-        [SerializeField] Rect stateDebugText = new(10f, 10f, 200f, 20f);
         bool _isRunning;
         Vector3 _momentum;
         Vector3 _savedMovementVelocity;
@@ -44,16 +42,11 @@ namespace Game.Runtime.Entities.Player.Controllers
         public event Action OnRun = delegate { };
         public event Action OnIdle = delegate { };
 
-        public void ApplyForce(Vector3 direction, float force)
-        {
-            _playerMover.SetVelocity(direction * force);
-            Debug.Log("Player Get Force!");
-        }
-
         protected override void Awake()
         {
             base.Awake();
             SetupStateMachine();
+            InitInput();
         }
 
         protected override void FixedUpdate()
@@ -94,13 +87,7 @@ namespace Game.Runtime.Entities.Player.Controllers
         }
 
         protected override void Update() => base.Update();
-
-        void OnGUI()
-        {
-            if (!isShowDebug) return;
-            GUI.Label(stateDebugText, $"Current Player State: {StateMachine.CurrentState}");
-        }
-
+        
         void SetupStateMachine()
         {
             var grounded = new GroundedState(this);
@@ -127,6 +114,8 @@ namespace Game.Runtime.Entities.Player.Controllers
 
             StateMachine.SetState(falling);
         }
+
+        void InitInput() => _input.EnablePlayerMap();
 
         Vector3 CalculateMovementVelocity() => CalculateMovementDirection() * _movementSpeed;
 

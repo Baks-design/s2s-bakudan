@@ -18,8 +18,13 @@ namespace Game.Runtime.Utilities.Extensions
         /// <returns>True if the transform is within range and angle (if provided) of the target, false otherwise.</returns>
         public static bool InRangeOf(this Transform source, Transform target, float maxDistance, float maxAngle = 360f)
         {
-            var directionToTarget = (target.position - source.position).With(y: 0f);
-            return directionToTarget.magnitude <= maxDistance && Vector3.Angle(source.forward, directionToTarget) <= maxAngle / 2f;
+            var directionToTarget = target.position - source.position;
+            directionToTarget.y = 0f; // Ignore vertical difference
+
+            var distance = directionToTarget.magnitude;
+            var angle = Vector3.Angle(source.forward, directionToTarget);
+
+            return distance <= maxDistance && angle <= maxAngle / 2f;
         }
 
         /// <summary>
@@ -35,9 +40,9 @@ namespace Game.Runtime.Utilities.Extensions
         public static IEnumerable<Transform> Children(this Transform parent) => parent.Cast<Transform>();
 
         /// <summary>
-        /// Resets transform's position, scale and rotation
+        /// Resets transform's position, scale, and rotation.
         /// </summary>
-        /// <param name="transform">Transform to use</param>
+        /// <param name="transform">Transform to use.</param>
         public static void Reset(this Transform transform)
         {
             transform.position = Vector3.zero;
@@ -79,13 +84,13 @@ namespace Game.Runtime.Utilities.Extensions
         /// <param name="parent">The parent transform.</param>
         /// <param name="action">The action to be performed on each child.</param>
         /// <remarks>
-        /// This method iterates over all child transforms in reverse order and executes a given action on them.
-        /// The action is a delegate that takes a Transform as parameter.
+        /// This method iterates over all child transforms and executes a given action on them.
+        /// The action is a delegate that takes a Transform as a parameter.
         /// </remarks>
         public static void ForEveryChild(this Transform parent, Action<Transform> action)
         {
-            for (var i = parent.childCount - 1; i >= 0; i--)
-                action(parent.GetChild(i));
+            foreach (Transform child in parent)
+                action(child);
         }
     }
 }

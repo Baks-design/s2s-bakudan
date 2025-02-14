@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   current: {fileID: 1423885582302055334}
-  musicMixerGroup: {fileID: 24300002, guid: 4b27e89dfed1bf24a968edbee6326284, type: 2}
+  musicMixerGroup: {fileID: 4381333971163537036, guid: 0ab0118d0fc0342b4bafedf2cf07bc41, type: 2}
   initialPlaylist: []
 --- !u!1 &3146915309112262445
 GameObject:

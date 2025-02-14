@@ -4,6 +4,7 @@ using Game.Runtime.Systems.Audio;
 using Game.Runtime.Systems.VFX;
 using Game.Runtime.Systems.Scenes;
 using Game.Runtime.Utilities.Patterns.Flyweight;
+using Game.Runtime.Systems.Persistence;
 
 namespace Game.Runtime.Systems.Management
 {
@@ -15,6 +16,7 @@ namespace Game.Runtime.Systems.Management
         [SerializeField] EffectManager effectsManager;
         [SerializeField] SceneLoader sceneLoaderManager;
         [SerializeField] FlyweightFactory flyweightFactory;
+        [SerializeField] SerializeManager serializeManager;
 
         void Awake()
         {
@@ -24,6 +26,7 @@ namespace Game.Runtime.Systems.Management
             ServiceLocator.Global.Register<IEffectService>(effectsManager);
             ServiceLocator.Global.Register<ISceneLoaderService>(sceneLoaderManager);
             ServiceLocator.Global.Register<IFlyweightService>(flyweightFactory);
+            ServiceLocator.Global.Register<ISerializeService>(serializeManager);
         }
     }
 }

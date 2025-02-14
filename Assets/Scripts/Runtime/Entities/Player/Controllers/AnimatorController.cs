@@ -12,22 +12,10 @@ namespace Game.Runtime.Entities.Player.Controllers
         [SerializeField, Parent] MovementController movementController;
         [SerializeField, Parent] PlayerMover playerMover;
         [SerializeField, Parent] Damageable damageable;
-        [SerializeField] Rect stateDebugText = new(10f, 10f, 200f, 20f);
 
         void OnEnable() => SubscribeToEvents();
 
-        void Update() => ResetPlayerVelocity();
-
         void OnDisable() => UnsubscribeFromEvents();
-
-        void OnGUI() => GUI.Label(stateDebugText, $"Current Animator State: {animator.GetCurrentAnimatorStateInfo(0)}");
-
-        void ResetPlayerVelocity()
-        {
-            var currentState = animator.GetCurrentAnimatorStateInfo(0);
-            if (currentState.tagHash.Equals(AnimatorStateHashes.ThrowState))
-                playerMover.LockRigidBody();
-        }
 
         void SubscribeToEvents()
         {

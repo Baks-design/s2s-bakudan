@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using System.Linq;
 
 namespace Game.Runtime.Utilities.Patterns.EventBus
 {
@@ -11,20 +12,15 @@ namespace Game.Runtime.Utilities.Patterns.EventBus
     /// </summary>
     public static class EventBusUtil
     {
-        public static IReadOnlyList<Type> EventTypes { get; set; }
-        public static IReadOnlyList<Type> EventBusTypes { get; set; }
+        static readonly Lazy<IReadOnlyList<Type>> _eventTypes = new(() => PredefinedAssemblyUtil.GetTypes(typeof(IEvent)));
+        static readonly Lazy<IReadOnlyList<Type>> _eventBusTypes = new(InitializeAllBuses);
+        static readonly Dictionary<Type, MethodInfo> _clearMethodsCache = new();
+
+        public static IReadOnlyList<Type> EventTypes => _eventTypes.Value;
+        public static IReadOnlyList<Type> EventBusTypes => _eventBusTypes.Value;
 #if UNITY_EDITOR
         public static PlayModeStateChange PlayModeState { get; set; }
 
-        /// <summary>
-        /// /// Initializes the Unity Editor related components of the EventBusUtil.
-        /// The [InitializeOnLoadMethod] attribute causes this method to be called every time a script
-        /// is loaded or when the game enters Play Mode in the Editor. This is useful to initialize
-        /// fields or states of the class that are necessary during the editing state that also apply
-        /// when the game enters Play Mode.
-        /// The method sets up a subscriber to the playModeStateChanged event to allow
-        /// actions to be performed when the Editor's play mode changes.
-        /// </summary>    
         [InitializeOnLoadMethod]
         public static void InitializeEditor()
         {
@@ -40,46 +36,46 @@ namespace Game.Runtime.Utilities.Patterns.EventBus
         }
 #endif
 
-        /// <summary>
-        /// Initializes the EventBusUtil class at runtime before the loading of any scene.
-        /// The [RuntimeInitializeOnLoadMethod] attribute instructs Unity to execute this method after
-        /// the game has been loaded but before any scene has been loaded, in both Play Mode and after
-        /// a Build is run. This guarantees that necessary initialization of bus-related types and events is
-        /// done before any game objects, scripts or components have started.
-        /// </summary>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Initialize()
         {
-            EventTypes = PredefinedAssemblyUtil.GetTypes(typeof(IEvent));
-            EventBusTypes = InitializeAllBuses();
+            // Initialization is handled by Lazy<T>
         }
 
         static List<Type> InitializeAllBuses()
         {
-            var eventBusTypes = new List<Type>();
-            var typedef = typeof(EventBus<>);
-
-            foreach (var eventType in EventTypes)
+            if (EventTypes == null)
             {
-                var busType = typedef.MakeGenericType(eventType);
-                eventBusTypes.Add(busType);
-                Debug.Log($"Initialized EventBus<{eventType.Name}>");
+                Debug.LogError("EventTypes is not initialized.");
+                return new List<Type>();
             }
 
-            return eventBusTypes;
+            var typedef = typeof(EventBus<>);
+            return EventTypes.Select(eventType => typedef.MakeGenericType(eventType)).ToList();
         }
 
-        /// <summary>
-        /// Clears (removes all listeners from) all event buses in the application.
-        /// </summary>
         public static void ClearAllBuses()
         {
-            Debug.Log("Clearing all buses...");
-            for (var i = 0; i < EventBusTypes.Count; i++)
+            if (EventBusTypes == null)
             {
-                var busType = EventBusTypes[i];
-                var clearMethod = busType.GetMethod("Clear", BindingFlags.Static | BindingFlags.NonPublic);
-                clearMethod?.Invoke(null, null);
+                Debug.LogError("EventBusTypes is not initialized.");
+                return;
+            }
+
+            Debug.Log("Clearing all buses...");
+            foreach (var busType in EventBusTypes)
+            {
+                if (!_clearMethodsCache.TryGetValue(busType, out var clearMethod))
+                {
+                    clearMethod = busType.GetMethod("Clear", BindingFlags.Static | BindingFlags.NonPublic);
+                    if (clearMethod == null)
+                    {
+                        Debug.LogError($"Clear method not found for {busType.Name}");
+                        continue;
+                    }
+                    _clearMethodsCache[busType] = clearMethod;
+                }
+                clearMethod.Invoke(null, null);
             }
         }
     }

@@ -1,0 +1,18 @@
+{
+    "name": "Game.Runtime.Systems.Persistence.Editor",
+    "rootNamespace": "Game.Runtime.Systems.Persistence.Editor",
+    "references": [
+        "GUID:b1bd992642cb2244c928d1575c2e2110"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

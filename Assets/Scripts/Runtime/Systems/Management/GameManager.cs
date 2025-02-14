@@ -1,24 +1,18 @@
 using UnityEngine;
 using Game.Runtime.Utilities.Patterns.StateMachines;
 using Game.Runtime.Utilities.Patterns.EventBus;
-using Game.Runtime.Systems.Inputs;
 using Game.Runtime.Components.Events;
 using Game.Runtime.Systems.Management.States;
-using Game.Runtime.Utilities.Helpers.Timers;
 
 namespace Game.Runtime.Systems.Management
 {
-    public class GameManager : StatefulEntity, IGameService 
+    public class GameManager : StatefulEntity, IGameService
     {
-        [SerializeField] InputReader inputReader;
-        [SerializeField] bool isShowDebug = true;
-        [SerializeField] Rect stateDebugText = new(10f, 10f, 200f, 20f);
-        GameStateEvent.GameState requestedState;
+        GameStateEvent.GameState requestedState = GameStateEvent.GameState.Gameplay;
         EventBinding<GameStateEvent> gameStateEventBinding;
-        readonly CountdownTimer timer = new(200f);
 
-        bool GameplayState => requestedState is GameStateEvent.GameState.Gameplay;
-        bool MenuState => requestedState is GameStateEvent.GameState.Menu;
+        bool RequestedGameplayState => requestedState is GameStateEvent.GameState.Gameplay;
+        bool RequestedMenuState => requestedState is GameStateEvent.GameState.Menu;
 
         #region LifeCycle
         protected override void Awake()
@@ -29,47 +23,24 @@ namespace Game.Runtime.Systems.Management
 
         void OnEnable() => SubEvents();
 
-        void Start()
-        {
-            InitializePlayer();
-            InitializeGameTimer();
-            InitInput();
-        }
-
         protected override void FixedUpdate() => base.FixedUpdate();
 
-        protected override void Update()
-        {
-            base.Update();
-            UpdateGameTime();
-        }
+        protected override void Update() => base.Update();
 
         void OnDisable() => UnsubEvents();
-
-        void OnDestroy() => DisposeItems();
-
-        void OnGUI()
-        {
-            if (!isShowDebug) return;
-            GUI.Label(stateDebugText, $"Current Game State: {StateMachine.CurrentState}");
-        }
         #endregion
 
-        #region Inits
-        void SetupStates() //FIXME: Adjust
+        #region Setups
+        void SetupStates()
         {
             var gameplayState = new GameplayState(this);
             var pauseState = new PauseState(this);
 
-            At(pauseState, gameplayState, GameplayState);
-            At(gameplayState, pauseState, MenuState);
+            At(pauseState, gameplayState, RequestedGameplayState);
+            At(gameplayState, pauseState, RequestedMenuState);
 
-            StateMachine.SetState(gameplayState); //TODO: Change When Use Menus To Menu State
+            StateMachine.SetState(gameplayState);
         }
-
-        void InitializeGameTimer() => timer.OnTimerStart += () => Debug.Log("Game Timer started");
-
-        void DisposeItems() => timer.Dispose();
         #endregion
 
         #region Events
@@ -81,17 +52,11 @@ namespace Game.Runtime.Systems.Management
 
         void UnsubEvents() => EventBus<GameStateEvent>.Deregister(gameStateEventBinding);
 
-        void OnChangeStateRequested(GameStateEvent gameStateEvent) => requestedState = gameStateEvent.CurrentGameState;
-        #endregion
-
-        #region Updates
-        void UpdateGameTime() => EventBus<GameStateEvent>.Raise(new GameStateEvent { CurrentGameTime = timer.Progress });
-        #endregion
-
-        #region Providers
-        void InitializePlayer() => EventBus<PlayerEvent>.Raise(new PlayerEvent());
-
-        void InitInput() => inputReader.EnablePlayerMap();
+        void OnChangeStateRequested(GameStateEvent gameStateEvent)
+        {
+            Debug.Log($"State Change Requested: {gameStateEvent.CurrentGameState}");
+            requestedState = gameStateEvent.CurrentGameState;
+        }
         #endregion
     }
 }

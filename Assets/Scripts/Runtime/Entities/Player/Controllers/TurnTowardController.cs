@@ -15,14 +15,12 @@ namespace Game.Runtime.Entities.Player.Controllers
 
         void LateUpdate()
         {
-            if (movementController == null || tr == null)
-                return;
+            if (movementController == null || tr == null) return;
 
             var velocity = Vector3.ProjectOnPlane(movementController.GetMovementVelocity, tr.parent.up);
 
             var velocityMagnitude = velocity.magnitude;
-            if (velocityMagnitude < 0.001f)
-                return;
+            if (velocityMagnitude < 0.001f) return;
 
             var targetAngle = Vector3.SignedAngle(tr.forward, velocity.normalized, tr.parent.up);
 
