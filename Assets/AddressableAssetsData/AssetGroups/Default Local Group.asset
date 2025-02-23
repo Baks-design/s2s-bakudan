@@ -45,6 +45,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b4ffcfd449166864c8791f2bdba526a8
+    m_Address: Assets/Prefabs/Gameplay/Player Entity.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 30c928b3acfda504a9abc12c5fdfb145, type: 2}
   m_SchemaSet:

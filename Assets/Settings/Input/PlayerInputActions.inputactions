@@ -33,7 +33,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Throw",
+                    "name": "Jump",
                     "type": "Button",
                     "id": "89232220-f1b1-4541-a3a6-7d874e7e696a",
                     "expectedControlType": "",
@@ -123,22 +123,22 @@
                 {
                     "name": "",
                     "id": "677ca464-66ee-4346-b7f5-5da9fccf2cd8",
-                    "path": "<Mouse>/leftButton",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Throw",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "a5dcb2ef-3609-4965-8e0b-6a8331f7c6de",
-                    "path": "<Gamepad>/rightShoulder",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Throw",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

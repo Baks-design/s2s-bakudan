@@ -6,6 +6,7 @@ using Game.Runtime.Systems.Interaction;
 
 namespace Game.Runtime.Entities.Player.Components
 {
+    [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
     public class PlayerMover : MonoBehaviour, IImpactable
     {
         [SerializeField, Self] Rigidbody rb;
@@ -15,47 +16,70 @@ namespace Game.Runtime.Entities.Player.Components
         [SerializeField] float colliderHeight = 2f;
         [SerializeField] float colliderThickness = 1f;
         [SerializeField] Vector3 colliderOffset = Vector3.zero;
-        [SerializeField] bool isInDebugMode = false;
+        [SerializeField] bool isInDebugMode;
         bool isUsingExtendedSensorRange = true;
-        bool isGrounded;
         int currentLayer;
         float baseSensorRange;
         Vector3 currentGroundAdjustmentVelocity;
         RaycastSensor sensor;
 
-        public bool IsGrounded => isGrounded;
-        public Vector3 GetGroundNormal => sensor.Normal;
-        public Collider GetColliderHit => sensor.Collider;
+        public bool IsGrounded { get; private set; }
+        public Vector3 GroundNormal => sensor.GetNormal;
+        public Collider ColliderHit => sensor.GetCollider;
 
         void Awake()
         {
-            Setup();
+            rb.freezeRotation = true;
+            rb.useGravity = false;
             RecalculateColliderDimensions();
         }
 
         void OnValidate()
         {
-            if (gameObject.activeInHierarchy)
-                RecalculateColliderDimensions();
+            if (!gameObject.activeInHierarchy)
+                return;
+
+            RecalculateColliderDimensions();
         }
 
         void LateUpdate()
         {
-            if (isInDebugMode)
-                sensor.DrawDebug();
+            if (!isInDebugMode)
+                return;
+            sensor.DrawDebug();
         }
 
-        void Setup()
+        public void ApplyForce(Vector3 direction, float force) => SetVelocity(direction * force);
+
+        public void CheckForGround()
         {
-            rb.freezeRotation = true;
-            rb.useGravity = false;
+            if (currentLayer != gameObject.layer)
+                RecalculateSensorLayerMask();
+
+            currentGroundAdjustmentVelocity = Vector3.zero;
+            sensor.castLength = isUsingExtendedSensorRange
+                ? baseSensorRange + colliderHeight * tr.localScale.x * stepHeightRatio
+                : baseSensorRange;
+            sensor.Cast();
+
+            IsGrounded = sensor.HasDetectedHit;
+            if (!IsGrounded)
+                return;
+
+            var distance = sensor.GetDistance;
+            var upperLimit = colliderHeight * tr.localScale.x * (1f - stepHeightRatio) * 0.5f;
+            var middle = upperLimit + colliderHeight * tr.localScale.x * stepHeightRatio;
+            var distanceToGo = middle - distance;
+
+            currentGroundAdjustmentVelocity = tr.up * (distanceToGo / Time.fixedDeltaTime);
         }
+
+        public void SetVelocity(Vector3 velocity) => rb.linearVelocity = velocity + currentGroundAdjustmentVelocity;
+
+        public void SetExtendSensorRange(bool isExtended) => isUsingExtendedSensorRange = isExtended;
 
         void RecalculateColliderDimensions()
         {
-            if (col == null)
-                Setup();
-
             col.height = colliderHeight * (1f - stepHeightRatio);
             col.radius = colliderThickness / 2f;
             col.center = colliderOffset * colliderHeight + new Vector3(0f, stepHeightRatio * col.height / 2f, 0f);
@@ -76,7 +100,7 @@ namespace Game.Runtime.Entities.Player.Components
             const float safetyDistanceFactor = 0.001f;
             var length = colliderHeight * (1f - stepHeightRatio) * 0.5f + colliderHeight * stepHeightRatio;
             baseSensorRange = length * (1f + safetyDistanceFactor) * tr.localScale.x;
-            sensor.CastLength = length * tr.localScale.x;
+            sensor.castLength = length * tr.localScale.x;
         }
 
         void RecalculateSensorLayerMask()
@@ -91,40 +115,8 @@ namespace Game.Runtime.Entities.Player.Components
             var ignoreRaycastLayer = LayerMask.NameToLayer("Ignore Raycast");
             layerMask &= ~(1 << ignoreRaycastLayer);
 
-            sensor.LayerMask = layerMask;
+            sensor.layermask = layerMask;
             currentLayer = objectLayer;
         }
-
-        public void ApplyForce(Vector3 direction, float force)
-        {
-            SetVelocity(direction * force);
-            Debug.Log("Player Get Force!");
-        }
-
-        public void CheckForGround()
-        {
-            if (currentLayer != gameObject.layer)
-                RecalculateSensorLayerMask();
-
-            currentGroundAdjustmentVelocity = Vector3.zero;
-            sensor.CastLength = isUsingExtendedSensorRange
-                ? baseSensorRange + colliderHeight * tr.localScale.x * stepHeightRatio
-                : baseSensorRange;
-            sensor.Cast();
-
-            isGrounded = sensor.HasDetectedHit;
-            if (!isGrounded) return;
-
-            var distance = sensor.Distance;
-            var upperLimit = colliderHeight * tr.localScale.x * (1f - stepHeightRatio) * 0.5f;
-            var middle = upperLimit + colliderHeight * tr.localScale.x * stepHeightRatio;
-            var distanceToGo = middle - distance;
-
-            currentGroundAdjustmentVelocity = tr.up * (distanceToGo / Time.fixedDeltaTime);
-        }
-
-        public void SetVelocity(Vector3 velocity) => rb.linearVelocity = velocity + currentGroundAdjustmentVelocity;
-
-        public void SetExtendSensorRange(bool isExtended) => isUsingExtendedSensorRange = isExtended;
     }
 }

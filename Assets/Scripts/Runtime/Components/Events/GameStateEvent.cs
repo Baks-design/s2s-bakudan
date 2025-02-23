@@ -10,7 +10,5 @@ namespace Game.Runtime.Components.Events
             Menu
         }
         public GameState CurrentGameState;
-
-        public float CurrentGameTime;
     }
 }

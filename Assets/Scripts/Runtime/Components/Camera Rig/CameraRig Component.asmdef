@@ -1,0 +1,22 @@
+{
+    "name": "Game.Runtime.Components.CameraRig",
+    "rootNamespace": "Game.Runtime.Components.CameraRig",
+    "references": [
+        "GUID:0deea4fa18234574cbeea98a850f1017",
+        "GUID:4307f53044263cf4b835bd812fc161a4",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:33759803a11f4d538227861a78aba30b"
+    ],
+    "includePlatforms": [
+        "Editor",
+        "WindowsStandalone64"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

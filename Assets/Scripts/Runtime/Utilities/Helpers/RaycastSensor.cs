@@ -5,63 +5,54 @@ namespace Game.Runtime.Utilities.Helpers
     public class RaycastSensor
     {
         public enum CastDirection { Forward, Right, Up, Backward, Left, Down }
+        public float castLength = 1f;
+        public LayerMask layermask = 255;
+        Vector3 origin = Vector3.zero;
+        CastDirection castDirection;
+        RaycastHit hitInfo;
+        readonly Transform tr;
 
-        public LayerMask LayerMask = Physics.AllLayers;
-        public float CastLength = 1f;
-        readonly Transform _transform;
-        RaycastHit _hitInfo;
+        public bool HasDetectedHit => hitInfo.collider != null;
+        public float GetDistance => hitInfo.distance;
+        public Vector3 GetNormal => hitInfo.normal;
+        public Vector3 GetPosition => hitInfo.point;
+        public Collider GetCollider => hitInfo.collider;
+        public Transform GetTransform => hitInfo.transform;
 
-        public CastDirection Direction { get; set; } = CastDirection.Forward;
-        public Vector3 Origin { get; set; } = Vector3.zero;
-        public bool HasDetectedHit => _hitInfo.collider != null;
-        public float Distance => _hitInfo.distance;
-        public Vector3 Normal => _hitInfo.normal;
-        public Vector3 Position => _hitInfo.point;
-        public Collider Collider => _hitInfo.collider;
-        public Transform HitTransform => _hitInfo.transform;
+        public RaycastSensor(Transform playerTransform) => tr = playerTransform;
 
-        public RaycastSensor(Transform transform)
-        => _transform = transform != null ? transform : throw new System.ArgumentNullException(nameof(transform));
+        public void SetCastDirection(CastDirection direction) => castDirection = direction;
 
-        public void SetCastDirection(CastDirection direction) => Direction = direction;
-
-        public void SetCastOrigin(Vector3 position) => Origin = _transform.InverseTransformPoint(position);
+        public void SetCastOrigin(Vector3 pos) => origin = tr.InverseTransformPoint(pos);
 
         public void Cast()
         {
-            var worldOrigin = _transform.TransformPoint(Origin);
+            var worldOrigin = tr.TransformPoint(origin);
             var worldDirection = GetCastDirection();
-            Physics.Raycast(worldOrigin, worldDirection, out _hitInfo, CastLength, LayerMask, QueryTriggerInteraction.Ignore);
+            Physics.Raycast(worldOrigin, worldDirection, out hitInfo, castLength, layermask, QueryTriggerInteraction.Ignore);
         }
 
-        Vector3 GetCastDirection() => Direction switch
+        Vector3 GetCastDirection() => castDirection switch
         {
-            CastDirection.Forward => _transform.forward,
-            CastDirection.Right => _transform.right,
-            CastDirection.Up => _transform.up,
-            CastDirection.Backward => -_transform.forward,
-            CastDirection.Left => -_transform.right,
-            CastDirection.Down => -_transform.up,
-            _ => throw new System.ArgumentOutOfRangeException(nameof(Direction), "Invalid cast direction."),
+            CastDirection.Forward => tr.forward,
+            CastDirection.Right => tr.right,
+            CastDirection.Up => tr.up,
+            CastDirection.Backward => -tr.forward,
+            CastDirection.Left => -tr.right,
+            CastDirection.Down => -tr.up,
+            _ => Vector3.one
         };
 
-        public void DrawDebug(bool debugMode = true)
+        public void DrawDebug()
         {
-            if (!debugMode || !HasDetectedHit) return;
+            if (!HasDetectedHit)
+                return;
 
-            DrawHitNormal();
-            DrawHitMarker();
-        }
-
-        void DrawHitNormal() => Debug.DrawRay(_hitInfo.point, _hitInfo.normal, Color.red, Time.deltaTime);
-
-        void DrawHitMarker()
-        {
-            const float markerSize = 0.2f;
-            Vector3[] directions = { Vector3.up, Vector3.right, Vector3.forward };
-
-            foreach (var dir in directions)
-                Debug.DrawLine(_hitInfo.point + dir * markerSize, _hitInfo.point - dir * markerSize, Color.green, Time.deltaTime);
+            Debug.DrawRay(hitInfo.point, hitInfo.normal, Color.red, Time.deltaTime);
+            var markerSize = 0.2f;
+            Debug.DrawLine(hitInfo.point + Vector3.up * markerSize, hitInfo.point - Vector3.up * markerSize, Color.green, Time.deltaTime);
+            Debug.DrawLine(hitInfo.point + Vector3.right * markerSize, hitInfo.point - Vector3.right * markerSize, Color.green, Time.deltaTime);
+            Debug.DrawLine(hitInfo.point + Vector3.forward * markerSize, hitInfo.point - Vector3.forward * markerSize, Color.green, Time.deltaTime);
         }
     }
 }

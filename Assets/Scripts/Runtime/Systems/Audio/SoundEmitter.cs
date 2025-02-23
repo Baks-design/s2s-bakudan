@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using Game.Runtime.Utilities.Patterns.ServiceLocator;
 using UnityEngine;
@@ -9,13 +8,12 @@ namespace Game.Runtime.Systems.Audio
     public class SoundEmitter : MonoBehaviour
     {
         [SerializeField] AudioSource audioSource;
-        Coroutine playingCoroutine;
         ISoundService soundService;
 
         public SoundData Data { get; private set; }
         public LinkedListNode<SoundEmitter> Node { get; set; }
 
-        void Start() => ServiceLocator.Global.Get(out soundService);
+        void Awake() => ServiceLocator.Global.Get(out soundService);
 
         public void Initialize(SoundData data)
         {
@@ -24,12 +22,10 @@ namespace Game.Runtime.Systems.Audio
             audioSource.outputAudioMixerGroup = data.mixerGroup;
             audioSource.loop = data.loop;
             audioSource.playOnAwake = data.playOnAwake;
-
             audioSource.mute = data.mute;
             audioSource.bypassEffects = data.bypassEffects;
             audioSource.bypassListenerEffects = data.bypassListenerEffects;
             audioSource.bypassReverbZones = data.bypassReverbZones;
-
             audioSource.priority = data.priority;
             audioSource.volume = data.volume;
             audioSource.pitch = data.pitch;
@@ -38,39 +34,28 @@ namespace Game.Runtime.Systems.Audio
             audioSource.reverbZoneMix = data.reverbZoneMix;
             audioSource.dopplerLevel = data.dopplerLevel;
             audioSource.spread = data.spread;
-
             audioSource.minDistance = data.minDistance;
             audioSource.maxDistance = data.maxDistance;
-
             audioSource.ignoreListenerVolume = data.ignoreListenerVolume;
             audioSource.ignoreListenerPause = data.ignoreListenerPause;
-
             audioSource.rolloffMode = data.rolloffMode;
         }
 
-        public void Play()
+        public async void Play()
         {
-            if (playingCoroutine != null)
-                StopCoroutine(playingCoroutine);
-
             audioSource.Play();
-            playingCoroutine = StartCoroutine(WaitForSoundToEnd());
+            await WaitForSoundToEnd();
+            Stop();
         }
 
-        IEnumerator WaitForSoundToEnd()
+        async Awaitable WaitForSoundToEnd()
         {
-            yield return new WaitWhile(() => audioSource.isPlaying);
-            Stop();
+            while (audioSource.isPlaying)
+                await Awaitable.NextFrameAsync();
         }
 
         public void Stop()
         {
-            if (playingCoroutine != null)
-            {
-                StopCoroutine(playingCoroutine);
-                playingCoroutine = null;
-            }
-
             audioSource.Stop();
             soundService.ReturnToPool(this);
         }

@@ -31,7 +31,7 @@ namespace Game.Runtime.Systems.VFX
 
         public void ReturnToPool(EffectEmitter emitter)
         {
-            if (emitter is EffectEmitter visualEffectEmitter)
+            if (emitter is var visualEffectEmitter)
                 effectEmitterPool.Release(visualEffectEmitter);
         }
     }

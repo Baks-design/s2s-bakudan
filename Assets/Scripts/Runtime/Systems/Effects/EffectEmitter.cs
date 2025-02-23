@@ -1,4 +1,3 @@
-using System.Collections;
 using Game.Runtime.Utilities.Patterns.ServiceLocator;
 using UnityEngine;
 using UnityEngine.VFX;
@@ -8,10 +7,9 @@ namespace Game.Runtime.Systems.VFX
     public class EffectEmitter : MonoBehaviour
     {
         [SerializeField] VisualEffect visualEffect;
-        Coroutine playingCoroutine;
         IEffectService effectService;
 
-        void Start() => ServiceLocator.Global.Get(out effectService);
+        void Awake() => ServiceLocator.Global.Get(out effectService);
 
         public void Initialize(EffectData data)
         {
@@ -20,29 +18,21 @@ namespace Game.Runtime.Systems.VFX
             visualEffect.SetFloat("Duration", data.duration);
         }
 
-        public void Play()
+        public async void Play()
         {
-            if (playingCoroutine != null)
-                StopCoroutine(playingCoroutine);
-
             visualEffect.Play();
-            playingCoroutine = StartCoroutine(WaitForSoundToEnd());
+            await WaitForSoundToEnd();
+            Stop();
         }
 
-        IEnumerator WaitForSoundToEnd()
+        async Awaitable WaitForSoundToEnd()
         {
-            yield return new WaitWhile(() => visualEffect.HasAnySystemAwake());
-            Stop();
+            while (visualEffect.HasAnySystemAwake())
+                await Awaitable.NextFrameAsync();
         }
 
         public void Stop()
         {
-            if (playingCoroutine != null)
-            {
-                StopCoroutine(playingCoroutine);
-                playingCoroutine = null;
-            }
-
             visualEffect.Stop();
             effectService.ReturnToPool(this);
         }

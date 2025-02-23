@@ -13,16 +13,8 @@ namespace Game.Runtime.Utilities.Helpers
         /// <returns>The signed angle between the vectors in degrees.</returns>
         public static float GetAngle(Vector3 vector1, Vector3 vector2, Vector3 planeNormal)
         {
-            // Normalize the vectors to ensure accurate angle calculation
-            vector1.Normalize();
-            vector2.Normalize();
-
-            // Calculate the unsigned angle between the vectors
             var angle = Vector3.Angle(vector1, vector2);
-
-            // Determine the sign of the angle using the cross product and the plane normal
             var sign = Mathf.Sign(Vector3.Dot(planeNormal, Vector3.Cross(vector1, vector2)));
-
             return angle * sign;
         }
 
@@ -33,11 +25,7 @@ namespace Game.Runtime.Utilities.Helpers
         /// <param name="direction">The direction vector to project onto.</param>
         /// <returns>The dot product of the vector and the direction.</returns>
         public static float GetDotProduct(Vector3 vector, Vector3 direction)
-        {
-            // Normalize the direction vector to ensure accurate projection
-            direction.Normalize();
-            return Vector3.Dot(vector, direction);
-        }
+        => Vector3.Dot(vector, direction.normalized);
 
         /// <summary>
         /// Removes the component of a vector that is in the direction of a given vector.
@@ -47,7 +35,6 @@ namespace Game.Runtime.Utilities.Helpers
         /// <returns>The vector with the specified direction removed.</returns>
         public static Vector3 RemoveDotVector(Vector3 vector, Vector3 direction)
         {
-            // Normalize the direction vector to ensure accurate removal
             direction.Normalize();
             return vector - direction * Vector3.Dot(vector, direction);
         }
@@ -60,7 +47,6 @@ namespace Game.Runtime.Utilities.Helpers
         /// <returns>The component of the vector in the direction of the given vector.</returns>
         public static Vector3 ExtractDotVector(Vector3 vector, Vector3 direction)
         {
-            // Normalize the direction vector to ensure accurate extraction
             direction.Normalize();
             return direction * Vector3.Dot(vector, direction);
         }
@@ -74,15 +60,11 @@ namespace Game.Runtime.Utilities.Helpers
         /// <returns>The vector after being rotated onto the specified plane.</returns>
         public static Vector3 RotateVectorOntoPlane(Vector3 vector, Vector3 planeNormal, Vector3 upDirection)
         {
-            // Ensure the plane normal and up direction are normalized
-            planeNormal.Normalize();
-            upDirection.Normalize();
-
-            // Calculate the rotation required to align the up direction with the plane normal
+            // Calculate rotation;
             var rotation = Quaternion.FromToRotation(upDirection, planeNormal);
-
-            // Apply the rotation to the vector
-            return rotation * vector;
+            // Apply rotation to vector;
+            vector = rotation * vector;
+            return vector;
         }
 
         /// <summary>
@@ -94,16 +76,8 @@ namespace Game.Runtime.Utilities.Helpers
         /// <returns>The projected point on the line closest to the original point.</returns>
         public static Vector3 ProjectPointOntoLine(Vector3 lineStartPosition, Vector3 lineDirection, Vector3 point)
         {
-            // Ensure the line direction is normalized
-            lineDirection.Normalize();
-
-            // Calculate the vector from the line start to the point
             var projectLine = point - lineStartPosition;
-
-            // Calculate the dot product to find the projection length
             var dotProduct = Vector3.Dot(projectLine, lineDirection);
-
-            // Return the projected point
             return lineStartPosition + lineDirection * dotProduct;
         }
 
@@ -114,9 +88,8 @@ namespace Game.Runtime.Utilities.Helpers
         /// <param name="speed">The speed at which to move towards the target vector.</param>
         /// <param name="deltaTime">The time interval over which to move.</param>
         /// <param name="targetVector">The target vector to approach.</param>
-        /// <returns>The new vector incremented toward the target vector by the specified speed and time interval.</returns>
-        public static Vector3 IncrementVectorTowardTargetVector(
-            Vector3 currentVector, float speed, float deltaTime, Vector3 targetVector)
-            => Vector3.MoveTowards(currentVector, targetVector, speed * deltaTime);
+        /// /// <returns>The new vector incremented toward the target vector by the specified speed and time interval.</returns>
+        public static Vector3 IncrementVectorTowardTargetVector(Vector3 currentVector, float speed, float deltaTime, Vector3 targetVector)
+        => Vector3.MoveTowards(currentVector, targetVector, speed * deltaTime);
     }
 }

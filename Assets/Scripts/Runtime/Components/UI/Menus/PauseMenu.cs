@@ -1,8 +1,8 @@
 using UnityEngine;
 using Game.Runtime.Utilities.Patterns.EventBus;
 using Game.Runtime.Components.Events;
-using Game.Runtime.Systems.Inputs;
 using static Game.Runtime.Components.Events.GameStateEvent;
+using Game.Runtime.Components.Inputs;
 
 namespace Game.Runtime.Components.UI
 {

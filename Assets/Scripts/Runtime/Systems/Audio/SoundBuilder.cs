@@ -30,7 +30,8 @@ namespace Game.Runtime.Systems.Audio
                 return;
             }
 
-            if (!soundManager.CanPlaySound(soundData)) return;
+            if (!soundManager.CanPlaySound(soundData))
+                return;
 
             var soundEmitter = soundManager.Get();
             soundEmitter.Initialize(soundData);

@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using Game.Runtime.Systems.Scenes;
+using Game.Runtime.Utilities.Patterns.ServiceLocator;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Game.Runtime.Systems.Persistence
 {
@@ -9,23 +10,15 @@ namespace Game.Runtime.Systems.Persistence
     {
         [SerializeField] GameData gameData;
         IDataService dataService;
+        ISceneLoaderService sceneLoaderService;
 
         public GameData GameData => gameData;
 
         void Awake() => dataService = new FileDataService(new JsonSerializer());
 
-        void OnEnable() => SceneManager.sceneLoaded += OnSceneLoaded;
+        void OnEnable() => Bind<PlayerPersistence, PlayerData>(gameData.playerData);
 
         void Start() => NewGame();
-
-        void OnDisable() => SceneManager.sceneLoaded -= OnSceneLoaded;
-
-        void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-            if (scene.name == "Menu") return;
-
-            Bind<PlayerPersistence, PlayerData>(gameData.playerData);
-        }
 
         void Bind<T, TData>(TData data) where T : MonoBehaviour, IBind<TData> where TData : ISaveable, new()
         {
@@ -57,9 +50,11 @@ namespace Game.Runtime.Systems.Persistence
             gameData = new GameData
             {
                 Name = "Game",
-                CurrentLevelName = "Demo"
+                CurrentLevelName = SceneID.NewGame
             };
-            SceneManager.LoadScene(gameData.CurrentLevelName);
+
+            ServiceLocator.Global.Get(out sceneLoaderService);
+            sceneLoaderService.LoadSceneGroup(gameData.CurrentLevelName.GetHashCode());
         }
 
         public void SaveGame() => dataService.Save(gameData);
@@ -67,9 +62,10 @@ namespace Game.Runtime.Systems.Persistence
         public void LoadGame(string gameName)
         {
             gameData = dataService.Load(gameName);
-            if (string.IsNullOrWhiteSpace(gameData.CurrentLevelName))
-                gameData.CurrentLevelName = "Demo";
-            SceneManager.LoadScene(gameData.CurrentLevelName);
+            gameData.CurrentLevelName = SceneID.LoadGame;
+
+            ServiceLocator.Global.Get(out sceneLoaderService);
+            sceneLoaderService.LoadSceneGroup(gameData.CurrentLevelName.GetHashCode());
         }
 
         public void ReloadGame() => LoadGame(gameData.Name);

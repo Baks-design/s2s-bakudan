@@ -2,7 +2,8 @@
     "name": "Game.Runtime.Systems.Persistence.Editor",
     "rootNamespace": "Game.Runtime.Systems.Persistence.Editor",
     "references": [
-        "GUID:b1bd992642cb2244c928d1575c2e2110"
+        "GUID:b1bd992642cb2244c928d1575c2e2110",
+        "GUID:1f9e0dafea8706844993160462f033fe"
     ],
     "includePlatforms": [
         "Editor"

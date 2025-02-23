@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Game.Runtime.Utilities.Patterns.StateMachines
 {
@@ -14,37 +15,31 @@ namespace Game.Runtime.Utilities.Patterns.StateMachines
         public void Update()
         {
             var transition = GetTransition();
-
             if (transition != null)
             {
                 ChangeState(transition.To);
-                ResetAllActionPredicateFlags();
+                
+                foreach (var node in nodes.Values)
+                    ResetActionPredicateFlags(node.Transitions);
+
+                ResetActionPredicateFlags(anyTransitions);
             }
 
             currentNode.State?.Update();
         }
 
-        void ResetAllActionPredicateFlags()
+        static void ResetActionPredicateFlags(IEnumerable<Transition> transitions)
         {
-            foreach (var node in nodes.Values)
-                foreach (var transition in node.Transitions)
-                    if (transition is Transition<ActionPredicate> actionTransition)
-                        actionTransition.condition.flag = false;
-
-            foreach (var transition in anyTransitions)
-                if (transition is Transition<ActionPredicate> actionTransition)
-                    actionTransition.condition.flag = false;
+            foreach (var transition in transitions.OfType<Transition<ActionPredicate>>())
+                transition.condition.flag = false;
         }
 
         public void FixedUpdate() => currentNode.State?.FixedUpdate();
 
         public void SetState(IState state)
         {
-            if (nodes.TryGetValue(state.GetType(), out var node))
-            {
-                currentNode = node;
-                currentNode.State?.OnEnter();
-            }
+            currentNode = nodes[state.GetType()];
+            currentNode.State?.OnEnter();
         }
 
         void ChangeState(IState state)
@@ -53,12 +48,11 @@ namespace Game.Runtime.Utilities.Patterns.StateMachines
                 return;
 
             var previousState = currentNode.State;
-            if (nodes.TryGetValue(state.GetType(), out var nextNode))
-            {
-                previousState?.OnExit();
-                nextNode.State.OnEnter();
-                currentNode = nextNode;
-            }
+            var nextState = nodes[state.GetType()].State;
+
+            previousState?.OnExit();
+            nextState.OnEnter();
+            currentNode = nodes[state.GetType()];
         }
 
         public void AddTransition<T>(IState from, IState to, T condition)
@@ -82,12 +76,12 @@ namespace Game.Runtime.Utilities.Patterns.StateMachines
 
         StateNode GetOrAddNode(IState state)
         {
-            if (!nodes.TryGetValue(state.GetType(), out var node))
+            var node = nodes.GetValueOrDefault(state.GetType());
+            if (node == null)
             {
                 node = new StateNode(state);
                 nodes[state.GetType()] = node;
             }
-
             return node;
         }
 

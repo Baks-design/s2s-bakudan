@@ -23,10 +23,6 @@ namespace Game.Runtime.Systems.Management
 
         void OnEnable() => SubEvents();
 
-        protected override void FixedUpdate() => base.FixedUpdate();
-
-        protected override void Update() => base.Update();
-
         void OnDisable() => UnsubEvents();
         #endregion
 

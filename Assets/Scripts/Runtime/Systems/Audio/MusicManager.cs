@@ -67,7 +67,8 @@ namespace Game.Runtime.Systems.Audio
 
         void HandleCrossFade()
         {
-            if (fading <= 0f) return;
+            if (fading <= 0f)
+                return;
 
             fading += Time.deltaTime;
 

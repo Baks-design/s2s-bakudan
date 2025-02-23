@@ -1,4 +1,5 @@
 using System;
+using Game.Runtime.Systems.Scenes;
 
 namespace Game.Runtime.Systems.Persistence
 {
@@ -6,7 +7,7 @@ namespace Game.Runtime.Systems.Persistence
     public class GameData
     {
         public string Name;
-        public string CurrentLevelName;
+        public SceneID CurrentLevelName;
         public PlayerData playerData;
     }
 }
